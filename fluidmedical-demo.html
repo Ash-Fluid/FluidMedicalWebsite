@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wave Interactive Demo — Fluid Medical</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{--charcoal:#37383A;--platinum:#ECE5DF;--teal:#2F6E73;--teal-dark:#245559;--sage:#A2B7B0;--tangerine:#F0721B;--blush:#ECC8BC;--white:#fff;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',Arial,sans-serif;color:var(--charcoal);background:var(--charcoal);line-height:1.6;-webkit-font-smoothing:antialiased;}
+
+/* ── NAV ── */
+.nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(55,56,58,0.96);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,0.08);}
+.nav-inner{max-width:1140px;margin:0 auto;padding:0 32px;display:flex;align-items:center;justify-content:space-between;height:64px;}
+.nav-logo{font-family:'DM Serif Display',Georgia,serif;font-size:22px;color:var(--white);text-decoration:none;letter-spacing:-0.3px;}
+.nav-logo span{color:var(--sage);}
+.nav-links{display:flex;align-items:center;gap:32px;}
+.nav-links a{color:rgba(255,255,255,0.75);text-decoration:none;font-size:14px;font-weight:500;transition:color .2s;}
+.nav-links a:hover,.nav-links a.active{color:var(--white);}
+.nav-cta{background:var(--teal);color:var(--white)!important;padding:9px 20px;border-radius:6px;font-weight:600!important;transition:background .2s!important;}
+.nav-cta:hover{background:var(--teal-dark)!important;}
+
+/* ── HERO INTRO ── */
+.demo-intro{background:var(--charcoal);padding:100px 32px 60px;text-align:center;position:relative;overflow:hidden;}
+.topo-demo{position:absolute;inset:0;overflow:hidden;pointer-events:none;}
+.topo-demo svg{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:80%;opacity:0.05;}
+.demo-intro-inner{max-width:720px;margin:0 auto;position:relative;z-index:1;}
+.demo-eyebrow{font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--sage);margin-bottom:12px;}
+.demo-title{font-family:'DM Serif Display',Georgia,serif;font-size:clamp(36px,4.5vw,60px);line-height:1.1;color:var(--white);margin-bottom:16px;letter-spacing:-0.8px;}
+.demo-title em{font-style:italic;color:var(--sage);}
+.demo-sub{font-size:17px;color:rgba(255,255,255,0.65);line-height:1.65;margin-bottom:28px;}
+.demo-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(240,114,27,0.15);border:1px solid rgba(240,114,27,0.3);border-radius:20px;padding:8px 18px;font-size:13px;color:var(--tangerine);font-weight:500;}
+.demo-badge::before{content:'';width:8px;height:8px;border-radius:50%;background:var(--tangerine);animation:blink 2s infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+
+/* ── PROTOTYPE SECTION ── */
+.prototype-section{background:#0a0a14;padding:48px 32px 64px;display:flex;flex-direction:column;align-items:center;}
+.proto-label-top{font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:24px;text-align:center;}
+.proto-frame{
+  /* No overflow:hidden — prototype renders its own phone shell with border-radius/shadow */
+  flex-shrink:0;
+  line-height:0; /* collapse whitespace gap below iframe */
+}
+.proto-frame iframe{
+  width:390px;
+  height:844px;
+  border:none;
+  display:block;
+  background:transparent;
+}
+.proto-note{text-align:center;font-size:12px;color:rgba(255,255,255,0.25);margin-top:28px;line-height:1.6;}
+
+/* ── FEATURE CALLOUTS ── */
+.features{background:var(--charcoal);padding:80px 32px;}
+.features-inner{max-width:1140px;margin:0 auto;}
+.features-title{font-family:'DM Serif Display',Georgia,serif;font-size:clamp(28px,3vw,40px);color:var(--white);text-align:center;margin-bottom:10px;letter-spacing:-0.5px;}
+.features-sub{font-size:16px;color:rgba(255,255,255,0.55);text-align:center;margin-bottom:48px;}
+.features-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;}
+.feature-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:28px 22px;transition:border-color .25s;}
+.feature-card:hover{border-color:rgba(162,183,176,0.3);}
+.feature-num{font-size:11px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--sage);margin-bottom:10px;}
+.feature-name{font-size:17px;font-weight:600;color:var(--white);margin-bottom:10px;}
+.feature-desc{font-size:14px;color:rgba(255,255,255,0.6);line-height:1.65;}
+.feature-tip{margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.06);font-size:12px;color:var(--sage);font-style:italic;}
+
+/* ── CTA SECTION ── */
+.demo-cta{background:var(--teal);padding:80px 32px;text-align:center;}
+.demo-cta-inner{max-width:640px;margin:0 auto;}
+.demo-cta h2{font-family:'DM Serif Display',Georgia,serif;font-size:clamp(32px,4vw,52px);color:var(--white);margin-bottom:16px;}
+.demo-cta p{font-size:17px;color:rgba(255,255,255,0.8);line-height:1.65;margin-bottom:32px;}
+.cta-buttons{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+.btn-white{background:var(--white);color:var(--teal);padding:15px 28px;border-radius:6px;font-size:16px;font-weight:700;text-decoration:none;transition:opacity .2s;}
+.btn-white:hover{opacity:0.92;}
+.btn-outline-white{border:2px solid rgba(255,255,255,0.4);color:var(--white);padding:13px 24px;border-radius:6px;font-size:15px;font-weight:500;text-decoration:none;transition:border-color .2s;}
+.btn-outline-white:hover{border-color:rgba(255,255,255,0.7);}
+
+/* ── FOOTER ── */
+.footer{background:#1E1F20;padding:60px 32px 32px;}
+.footer-inner{max-width:1140px;margin:0 auto;}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:48px;}
+.footer-logo{font-family:'DM Serif Display',Georgia,serif;font-size:22px;color:var(--white);margin-bottom:12px;text-decoration:none;display:inline-block;}
+.footer-logo span{color:var(--sage);}
+.footer-tagline{font-size:13.5px;color:rgba(255,255,255,0.5);line-height:1.6;max-width:280px;}
+.footer-parent{margin-top:16px;font-size:12px;color:rgba(255,255,255,0.35);}
+.footer-parent a{color:var(--sage);text-decoration:none;}
+.footer-col h4{font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:14px;}
+.footer-col a{display:block;font-size:14px;color:rgba(255,255,255,0.6);text-decoration:none;margin-bottom:8px;}
+.footer-col a:hover{color:var(--white);}
+.footer-bottom{border-top:1px solid rgba(255,255,255,0.08);padding-top:24px;display:flex;justify-content:space-between;font-size:12px;color:rgba(255,255,255,0.3);}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){.features-grid{grid-template-columns:1fr 1fr;}}
+@media(max-width:640px){
+  .nav-links{display:none;}
+  .features-grid{grid-template-columns:1fr;}
+  .footer-grid{grid-template-columns:1fr;}
+  .footer-bottom{flex-direction:column;gap:8px;}
+  .cta-buttons{flex-direction:column;align-items:center;}
+  .proto-frame{width:340px;height:736px;}
+  .proto-frame iframe{width:340px;height:736px;}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="fluidmedical-home.html" class="nav-logo">Fluid<span>Medical</span></a>
+    <div class="nav-links">
+      <a href="fluidmedical-home.html">Home</a>
+      <a href="fluidmedical-platform.html">Platform</a>
+      <a href="fluidmedical-security.html">Security &amp; Data</a>
+      <a href="fluidmedical-about.html">About</a>
+      <a href="fluidmedical-contact.html">Contact</a>
+      <a href="fluidmedical-contact.html" class="nav-cta">Get Wave →</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO INTRO -->
+<section class="demo-intro">
+  <div class="topo-demo">
+    <svg viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+      <g fill="none" stroke="white" stroke-width="1">
+        <ellipse cx="400" cy="300" rx="380" ry="280"/>
+        <ellipse cx="400" cy="300" rx="330" ry="238"/>
+        <ellipse cx="400" cy="300" rx="280" ry="196"/>
+        <ellipse cx="400" cy="300" rx="230" ry="156"/>
+        <ellipse cx="400" cy="300" rx="180" ry="118"/>
+        <ellipse cx="400" cy="300" rx="132" ry="84"/>
+        <ellipse cx="400" cy="300" rx="88" ry="56"/>
+        <ellipse cx="400" cy="300" rx="48" ry="30"/>
+      </g>
+    </svg>
+  </div>
+  <div class="demo-intro-inner">
+    <p class="demo-eyebrow">Interactive Prototype</p>
+    <h1 class="demo-title">Experience <em>Wave.</em></h1>
+    <p class="demo-sub">Click through the full app. Explore your dashboard, run a Fluid Precision urine test, review health records, and ask your data a question with the AI assistant.</p>
+    <span class="demo-badge">Live prototype · No signup required</span>
+  </div>
+</section>
+
+<!-- PROTOTYPE — iframe embed, isolated from page styles -->
+<section class="prototype-section">
+  <p class="proto-label-top">Wave Health · Interactive Prototype V13</p>
+  <div class="proto-frame">
+    <iframe
+      src="wave-prototype-v13.html"
+      width="390"
+      height="844"
+      title="Wave Health Interactive Prototype"
+      scrolling="no"
+      loading="eager"
+    ></iframe>
+  </div>
+  <p class="proto-note">Use the tab bar at the bottom to navigate between screens.<br>Log in with any email + password to enter the app.</p>
+</section>
+
+<!-- FEATURE CALLOUTS -->
+<section class="features">
+  <div class="features-inner">
+    <h2 class="features-title">Four screens. One complete picture.</h2>
+    <p class="features-sub">Navigate using the bottom tab bar in the prototype above.</p>
+    <div class="features-grid">
+
+      <div class="feature-card">
+        <div class="feature-num">Tab 01</div>
+        <div class="feature-name">Dashboard</div>
+        <p class="feature-desc">Your real-time health overview — biomarker trends, wearable metrics (HRV, sleep, SpO₂), and daily movement. Everything at a glance, personalised to you.</p>
+        <div class="feature-tip">Try tapping on individual metric cards to see trend detail.</div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-num">Tab 02</div>
+        <div class="feature-name">My Records</div>
+        <p class="feature-desc">Upload any health document — lab results, clinical notes, imaging reports — and watch the AI extract and index the key data automatically via Fluid's OCR engine.</p>
+        <div class="feature-tip">Try uploading a document to see the AI extraction flow in action.</div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-num">Tab 03</div>
+        <div class="feature-name">Fluid Precision</div>
+        <p class="feature-desc">Your Fluid Precision at-home urine test results — 8–12 biomarkers from a 90-second test. View current results, historical trends, and what each marker means for you.</p>
+        <div class="feature-tip">Results are colour-coded: green = normal range, amber = worth watching.</div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-num">Tab 04</div>
+        <div class="feature-name">AI Health Query</div>
+        <p class="feature-desc">Ask your health data anything — "How has my hydration changed this month?", "What does my creatinine trend mean?". The AI pulls from your actual data to answer.</p>
+        <div class="feature-tip">Try one of the suggested query chips, or type your own question.</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="demo-cta">
+  <div class="demo-cta-inner">
+    <h2>Ready to try the real Wave?</h2>
+    <p>Wave Mini launches Q3 2026 — join the waitlist for early access. Free to start, no commitment required.</p>
+    <div class="cta-buttons">
+      <a href="fluidmedical-contact.html" class="btn-white">Join the Waitlist →</a>
+      <a href="fluidmedical-platform.html" class="btn-outline-white">Learn About the Platform</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div>
+        <a href="fluidmedical-home.html" class="footer-logo">Fluid<span>Medical</span></a>
+        <p class="footer-tagline">Primary health care within reach — for individuals, families, remote communities, and the organisations that serve them.</p>
+        <p class="footer-parent">Part of the <a href="https://fluidscientific.com">Fluid Scientific</a> ecosystem</p>
+      </div>
+      <div class="footer-col">
+        <h4>Platform</h4>
+        <a href="fluidmedical-platform.html">Wave Overview</a>
+        <a href="fluidmedical-demo.html">Interactive Demo</a>
+        <a href="fluidmedical-security.html">Security &amp; Data</a>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a href="fluidmedical-about.html">About Us</a>
+        <a href="fluidmedical-contact.html">Contact</a>
+        <a href="https://fluidscientific.com">Fluid Scientific</a>
+      </div>
+      <div class="footer-col">
+        <h4>Get Wave</h4>
+        <a href="fluidmedical-contact.html">Join Waitlist</a>
+        <a href="fluidmedical-contact.html#org">For Organisations</a>
+        <a href="mailto:info@fluidmedical.com">info@fluidmedical.com</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Fluid Medical. Vancouver, Canada.</span>
+      <span>Privacy Policy · Terms of Use</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

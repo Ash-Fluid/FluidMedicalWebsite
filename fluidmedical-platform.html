@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wave Platform — Fluid Medical</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --charcoal: #37383A; --platinum: #ECE5DF; --teal: #2F6E73;
+  --sage: #A2B7B0; --tangerine: #F0721B; --blush: #ECC8BC; --white: #ffffff;
+  --nav-h: 72px;
+}
+html { scroll-behavior: smooth; }
+body { font-family: 'DM Sans', system-ui, sans-serif; background: var(--platinum); color: var(--charcoal); line-height: 1.65; -webkit-font-smoothing: antialiased; }
+a { color: inherit; text-decoration: none; }
+h1, h2, h3, h4 { font-family: 'DM Serif Display', Georgia, serif; line-height: 1.15; }
+h1 { font-size: clamp(2.4rem, 6vw, 4.5rem); letter-spacing: -0.02em; }
+h2 { font-size: clamp(1.8rem, 4vw, 3rem); letter-spacing: -0.015em; }
+h3 { font-size: clamp(1.3rem, 2.5vw, 1.75rem); }
+p { font-size: 1.0625rem; }
+
+/* ── Nav ── */
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: var(--nav-h); display: flex; align-items: center; justify-content: space-between; padding: 0 clamp(1.5rem, 5vw, 4rem); background: rgba(55,56,58,0.97); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255,255,255,0.07); transition: box-shadow 0.3s; }
+.nav-logo { font-family: 'DM Serif Display', serif; font-size: 1.5rem; color: var(--platinum); letter-spacing: -0.02em; display: flex; align-items: center; gap: 10px; }
+.nav-logo-mark { width: 32px; height: 32px; background: var(--teal); border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+.nav-links { display: flex; align-items: center; gap: 2rem; }
+.nav-links a { color: rgba(236,229,223,0.7); font-size: 0.9375rem; font-weight: 500; transition: color 0.2s; }
+.nav-links a:hover, .nav-links a.active { color: var(--platinum); }
+.btn-nav { background: var(--teal); color: var(--white); padding: 0.5rem 1.25rem; border-radius: 8px; font-size: 0.9375rem; font-weight: 600; transition: background 0.2s, transform 0.15s; }
+.btn-nav:hover { background: #246063; transform: translateY(-1px); }
+.hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; background: none; border: none; }
+.hamburger span { display: block; width: 22px; height: 2px; background: var(--platinum); border-radius: 2px; }
+.mobile-menu { display: none; position: fixed; top: var(--nav-h); left: 0; right: 0; z-index: 99; background: var(--charcoal); padding: 1.5rem 2rem 2rem; flex-direction: column; gap: 0.25rem; border-bottom: 1px solid rgba(255,255,255,0.1); }
+.mobile-menu.open { display: flex; }
+.mobile-menu a { color: var(--platinum); font-size: 1rem; font-weight: 500; padding: 0.65rem 0; border-bottom: 1px solid rgba(255,255,255,0.07); }
+.mobile-menu .btn-nav { margin-top: 0.75rem; justify-content: center; border-bottom: none; }
+
+/* ── Layout ── */
+.topo-wrap { position: absolute; inset: 0; overflow: hidden; pointer-events: none; opacity: 0.09; z-index: 0; }
+.topo-wrap svg { width: 100%; height: 100%; }
+.section { position: relative; overflow: hidden; }
+.section-dark { background: var(--charcoal); color: var(--platinum); }
+.section-light { background: var(--platinum); color: var(--charcoal); }
+.container { max-width: 1180px; margin: 0 auto; padding: 0 clamp(1.5rem, 5vw, 4rem); position: relative; z-index: 1; }
+.section-pad { padding: clamp(5rem, 10vw, 9rem) 0; }
+.eyebrow { font-size: 0.8125rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--teal); margin-bottom: 0.75rem; }
+.eyebrow-light { color: var(--sage); }
+
+/* ── Buttons ── */
+.btn { display: inline-flex; align-items: center; gap: 8px; padding: 0.85rem 1.75rem; border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 1rem; font-weight: 600; cursor: pointer; border: none; transition: background 0.2s, transform 0.15s, box-shadow 0.2s; text-decoration: none; }
+.btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.18); }
+.btn-primary { background: var(--teal); color: var(--white); }
+.btn-primary:hover { background: #246063; }
+.btn-outline-light { background: transparent; color: var(--platinum); border: 2px solid rgba(236,229,223,0.35); }
+.btn-outline-light:hover { border-color: var(--platinum); background: rgba(236,229,223,0.08); box-shadow: none; }
+.btn-outline-dark { background: transparent; color: var(--charcoal); border: 2px solid rgba(55,56,58,0.28); }
+.btn-outline-dark:hover { border-color: var(--charcoal); background: rgba(55,56,58,0.06); box-shadow: none; }
+
+/* ── Page Hero ── */
+.page-hero { background: var(--charcoal); color: var(--platinum); padding: calc(var(--nav-h) + 5rem) 0 5rem; position: relative; overflow: hidden; }
+.page-hero-inner { max-width: 720px; }
+.page-hero h1 em { font-style: italic; color: var(--blush); }
+.page-hero-sub { font-size: clamp(1rem, 2vw, 1.2rem); color: rgba(236,229,223,0.7); margin-top: 1.25rem; line-height: 1.72; max-width: 600px; }
+
+/* ── Pod Deep Dive ── */
+.pod-section { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; padding: clamp(4rem, 8vw, 7rem) 0; border-bottom: 1px solid rgba(55,56,58,0.1); }
+.pod-section:last-child { border-bottom: none; }
+.pod-section.reverse .pod-visual { order: -1; }
+.pod-tag { display: inline-flex; align-items: center; gap: 6px; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; padding: 0.3rem 0.8rem; border-radius: 100px; margin-bottom: 1.25rem; }
+.pod-tag.teal { background: rgba(47,110,115,0.12); color: var(--teal); border: 1px solid rgba(47,110,115,0.25); }
+.pod-tag.blue { background: rgba(14,165,233,0.1); color: #0EA5E9; border: 1px solid rgba(14,165,233,0.22); }
+.pod-tag.orange { background: rgba(240,114,27,0.1); color: var(--tangerine); border: 1px solid rgba(240,114,27,0.22); }
+.pod-tag.purple { background: rgba(139,92,246,0.1); color: #8B5CF6; border: 1px solid rgba(139,92,246,0.22); }
+.pod-tag-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+.pod-content h2 { margin-bottom: 1rem; }
+.pod-content p { color: rgba(55,56,58,0.68); line-height: 1.72; margin-bottom: 1.25rem; }
+.pod-content p.dark { color: rgba(236,229,223,0.68); }
+.pod-feature-list { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1.5rem; }
+.pod-feature-list li { display: flex; align-items: flex-start; gap: 10px; font-size: 0.9375rem; }
+.pod-feature-list li span.lbl { color: rgba(55,56,58,0.72); line-height: 1.5; }
+.pod-feature-list li span.lbl-d { color: rgba(236,229,223,0.68); line-height: 1.5; }
+.pod-check { display: flex; align-items: center; justify-content: center; flex-shrink: 0; width: 20px; height: 20px; border-radius: 50%; margin-top: 1px; }
+.pod-check.teal-c { background: rgba(47,110,115,0.18); }
+.pod-check.blue-c { background: rgba(14,165,233,0.15); }
+.pod-check.orange-c { background: rgba(240,114,27,0.15); }
+.pod-check.purple-c { background: rgba(139,92,246,0.15); }
+.pod-live-badge { display: inline-flex; align-items: center; gap: 5px; background: rgba(16,185,129,0.12); color: #10B981; font-size: 0.8rem; font-weight: 600; padding: 0.25rem 0.7rem; border-radius: 100px; margin-top: 1.5rem; }
+.pod-live-badge::before { content: ''; display: block; width: 6px; height: 6px; border-radius: 50%; background: #10B981; animation: pulse 2s infinite; }
+.pod-coming-badge { display: inline-block; background: rgba(139,92,246,0.12); color: #8B5CF6; font-size: 0.8rem; font-weight: 600; padding: 0.25rem 0.7rem; border-radius: 100px; margin-top: 1.5rem; }
+@keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
+
+/* ── Pod Visual Cards ── */
+.pod-visual { display: flex; justify-content: center; align-items: center; }
+.vis-card {
+  border-radius: 20px; padding: 1.75rem;
+  width: 100%; max-width: 380px;
+  position: relative; overflow: hidden;
+}
+.vis-card.dark-card { background: #0F1829; border: 1px solid rgba(255,255,255,0.08); }
+.vis-card.light-card { background: white; border: 1px solid rgba(55,56,58,0.1); box-shadow: 0 8px 32px rgba(55,56,58,0.08); }
+.vis-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; }
+.vis-card-title { color: #E2E8F0; font-size: 0.95rem; font-weight: 600; }
+.vis-card-title-d { color: var(--charcoal); font-size: 0.95rem; font-weight: 600; }
+.vis-badge { font-size: 0.72rem; font-weight: 700; padding: 0.22rem 0.6rem; border-radius: 5px; }
+.vis-badge.green { background: rgba(16,185,129,0.15); color: #34D399; }
+.vis-badge.teal { background: rgba(47,110,115,0.15); color: var(--teal); }
+.vis-badge.blue { background: rgba(14,165,233,0.15); color: #0EA5E9; }
+.vis-badge.purple { background: rgba(139,92,246,0.15); color: #8B5CF6; }
+.ua-analyte-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; margin-bottom: 1rem; }
+.ua-item { text-align: center; }
+.ua-item-name { color: #64748B; font-size: 9px; letter-spacing: 0.3px; text-transform: uppercase; margin-bottom: 3px; }
+.ua-item-val { font-size: 13px; font-weight: 700; }
+.ua-item-val.ok { color: #34D399; }
+.ua-item-val.tr { color: #FCD34D; }
+.ua-detail { background: rgba(255,255,255,0.04); border-radius: 10px; padding: 10px 12px; margin-top: 6px; }
+.ua-detail-row { display: flex; justify-content: space-between; align-items: center; font-size: 12px; margin-bottom: 4px; }
+.ua-detail-row:last-child { margin-bottom: 0; }
+.ua-detail-key { color: #64748B; }
+.ua-detail-val { color: #E2E8F0; font-weight: 600; }
+.wearable-row { display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.04); border-radius: 10px; padding: 10px 12px; margin-bottom: 6px; }
+.wearable-row:last-child { margin-bottom: 0; }
+.wr-left { display: flex; align-items: center; gap: 10px; }
+.wr-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.wr-icon.blue { background: rgba(14,165,233,0.15); }
+.wr-icon.green { background: rgba(16,185,129,0.15); }
+.wr-icon.purple { background: rgba(139,92,246,0.15); }
+.wr-icon.orange { background: rgba(240,114,27,0.12); }
+.wr-name { color: #E2E8F0; font-size: 13px; font-weight: 600; }
+.wr-sub { color: #64748B; font-size: 10px; margin-top: 1px; }
+.wr-val { color: #F1F5F9; font-size: 14px; font-weight: 700; }
+.wr-delta { font-size: 10px; margin-top: 1px; text-align: right; }
+.wr-delta.up { color: #34D399; }
+.wr-delta.neutral { color: #64748B; }
+.context-tag-grid { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 1rem; }
+.ctx-tag { font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 8px; }
+.ctx-tag.pink { background: rgba(236,200,188,0.25); color: #C45A3A; }
+.ctx-tag.sage { background: rgba(162,183,176,0.2); color: var(--teal); }
+.ctx-tag.soft { background: rgba(55,56,58,0.08); color: rgba(55,56,58,0.65); }
+.ctx-insight { background: linear-gradient(135deg, rgba(47,110,115,0.08), rgba(240,114,27,0.04)); border: 1px solid rgba(47,110,115,0.18); border-radius: 10px; padding: 12px; }
+.ctx-insight-lbl { font-size: 10px; font-weight: 700; letter-spacing: 0.4px; text-transform: uppercase; color: var(--teal); margin-bottom: 4px; }
+.ctx-insight-text { font-size: 12px; color: rgba(55,56,58,0.7); line-height: 1.5; }
+.doc-list-item { display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.04); border-radius: 10px; padding: 10px 12px; margin-bottom: 6px; border: 1px solid rgba(255,255,255,0.05); }
+.doc-icon-sm { width: 36px; height: 42px; border-radius: 6px; background: rgba(14,165,233,0.1); border: 1px solid rgba(14,165,233,0.18); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.doc-icon-sm span { color: #38BDF8; font-size: 8px; font-weight: 700; }
+.doc-name-sm { color: #E2E8F0; font-size: 12px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.doc-meta-sm { color: #64748B; font-size: 10px; margin-top: 1px; }
+.doc-status-sm { font-size: 10px; font-weight: 600; padding: 2px 6px; border-radius: 4px; background: rgba(16,185,129,0.15); color: #34D399; flex-shrink: 0; }
+
+/* ── Multi-Profile ── */
+.multi-profile-visual {
+  display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap;
+}
+.profile-pill {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--white); border: 1px solid rgba(55,56,58,0.12);
+  border-radius: 12px; padding: 0.65rem 1rem;
+  box-shadow: 0 2px 10px rgba(55,56,58,0.07);
+}
+.profile-avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; color: white; flex-shrink: 0; }
+.pa-teal { background: var(--teal); }
+.pa-tangerine { background: var(--tangerine); }
+.pa-sage { background: var(--sage); }
+.pa-blush { background: #C45A3A; }
+.profile-info-name { font-size: 13px; font-weight: 600; color: var(--charcoal); }
+.profile-info-role { font-size: 10px; color: var(--sage); }
+.profile-active { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--teal); flex-shrink: 0; }
+
+/* ── Tier Comparison ── */
+.tier-table { width: 100%; border-collapse: collapse; margin-top: 2.5rem; }
+.tier-table th { font-family: 'DM Serif Display', serif; font-size: 1.1rem; padding: 1rem 1.25rem; text-align: left; border-bottom: 2px solid rgba(55,56,58,0.12); }
+.tier-table th:first-child { font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 600; color: rgba(55,56,58,0.5); text-transform: uppercase; letter-spacing: 0.08em; }
+.tier-table th.featured-col { color: var(--teal); }
+.tier-table td { padding: 0.85rem 1.25rem; font-size: 0.9375rem; border-bottom: 1px solid rgba(55,56,58,0.07); color: rgba(55,56,58,0.75); }
+.tier-table td:first-child { font-weight: 500; color: var(--charcoal); }
+.tier-table td.featured-col { background: rgba(47,110,115,0.04); }
+.tier-table tr:hover td { background: rgba(55,56,58,0.02); }
+.tier-table tr:hover td.featured-col { background: rgba(47,110,115,0.06); }
+.check-yes { color: var(--teal); font-size: 1.1rem; }
+.check-no { color: rgba(55,56,58,0.25); font-size: 1rem; }
+.check-soon { color: var(--tangerine); font-size: 0.75rem; font-weight: 600; }
+.tier-table-wrap { overflow-x: auto; }
+
+/* ── Integrations ── */
+.integrations-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 2.5rem; }
+.integration-card {
+  border-radius: 14px; padding: 1.5rem;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  display: flex; flex-direction: column; gap: 0.75rem;
+  transition: border-color 0.3s, transform 0.3s;
+}
+.integration-card:hover { border-color: rgba(47,110,115,0.4); transform: translateY(-3px); }
+.integration-card.coming { opacity: 0.55; }
+.int-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
+.int-name { color: var(--platinum); font-weight: 600; font-size: 0.9375rem; }
+.int-desc { color: rgba(236,229,223,0.55); font-size: 0.875rem; line-height: 1.5; }
+.int-status { display: inline-flex; align-items: center; gap: 4px; font-size: 0.75rem; font-weight: 600; }
+.int-status.live { color: #34D399; }
+.int-status.soon { color: rgba(236,229,223,0.4); }
+.int-status.live::before { content: ''; display: block; width: 5px; height: 5px; border-radius: 50%; background: #34D399; }
+
+/* ── Footer ── */
+footer { background: var(--charcoal); color: rgba(236,229,223,0.55); padding: 3.5rem 0 2rem; }
+.footer-inner { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem; margin-bottom: 2.5rem; }
+.footer-logo { font-family: 'DM Serif Display', serif; font-size: 1.4rem; color: var(--platinum); margin-bottom: 0.75rem; }
+.footer-tagline { font-size: 0.875rem; line-height: 1.65; max-width: 280px; }
+.footer-col h5 { color: var(--platinum); font-size: 0.78rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 1rem; }
+.footer-col a { display: block; font-size: 0.9rem; margin-bottom: 0.5rem; color: rgba(236,229,223,0.5); transition: color 0.2s; }
+.footer-col a:hover { color: var(--platinum); }
+.footer-bottom { border-top: 1px solid rgba(255,255,255,0.08); padding-top: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+.footer-copy { color: rgba(236,229,223,0.35); font-size: 0.8125rem; }
+.footer-legal { display: flex; gap: 1.5rem; }
+.footer-legal a { color: rgba(236,229,223,0.35); font-size: 0.8125rem; transition: color 0.2s; }
+.footer-legal a:hover { color: rgba(236,229,223,0.65); }
+
+@media (max-width: 900px) {
+  .pod-section { grid-template-columns: 1fr; gap: 3rem; }
+  .pod-section.reverse .pod-visual { order: 0; }
+  .integrations-grid { grid-template-columns: 1fr 1fr; }
+  .footer-inner { grid-template-columns: 1fr 1fr; gap: 2rem; }
+}
+@media (max-width: 640px) {
+  .nav-links { display: none; }
+  .hamburger { display: flex; }
+  .integrations-grid { grid-template-columns: 1fr; }
+  .footer-inner { grid-template-columns: 1fr; gap: 1.5rem; }
+  .tier-table th, .tier-table td { padding: 0.65rem 0.75rem; font-size: 0.85rem; }
+}
+</style>
+</head>
+<body>
+
+<nav id="mainNav">
+  <a href="fluidmedical-home.html" class="nav-logo">
+    <div class="nav-logo-mark"><svg width="18" height="12" viewBox="0 0 24 16" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><path d="M2 8c0 0 3-6 6-6s5 12 8 12 6-6 6-6"/></svg></div>
+    Fluid Medical
+  </a>
+  <div class="nav-links">
+    <a href="fluidmedical-home.html">Home</a>
+    <a href="fluidmedical-platform.html" class="active">Platform</a>
+    <a href="fluidmedical-security.html">Security &amp; Data</a>
+    <a href="fluidmedical-about.html">About</a>
+    <a href="fluidmedical-contact.html">Contact</a>
+    <a href="fluidmedical-contact.html" class="btn-nav">Get Wave →</a>
+  </div>
+  <button class="hamburger" onclick="toggleMenu()" aria-label="Menu"><span></span><span></span><span></span></button>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="fluidmedical-home.html">Home</a>
+  <a href="fluidmedical-platform.html">Platform</a>
+  <a href="fluidmedical-security.html">Security &amp; Data</a>
+  <a href="fluidmedical-about.html">About</a>
+  <a href="fluidmedical-contact.html">Contact</a>
+  <a href="fluidmedical-contact.html" class="btn-nav">Get Wave →</a>
+</div>
+
+<!-- ── Page Hero ── -->
+<section class="page-hero section">
+  <div class="topo-wrap">
+    <svg viewBox="0 0 1400 600" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+      <g fill="none" stroke="white" stroke-width="1">
+        <ellipse cx="1050" cy="300" rx="560" ry="340" transform="rotate(-10 1050 300)"/>
+        <ellipse cx="1050" cy="300" rx="470" ry="270" transform="rotate(-10 1050 300)"/>
+        <ellipse cx="1050" cy="300" rx="380" ry="200" transform="rotate(-10 1050 300)"/>
+        <ellipse cx="1050" cy="300" rx="290" ry="135" transform="rotate(-10 1050 300)"/>
+        <ellipse cx="1050" cy="300" rx="200" ry="80" transform="rotate(-10 1050 300)"/>
+      </g>
+    </svg>
+  </div>
+  <div class="container">
+    <div class="page-hero-inner">
+      <div class="eyebrow eyebrow-light">Wave Platform</div>
+      <h1>Your complete health picture.</h1>
+      <p class="page-hero-sub">Four features. One unified view. Wave connects your diagnostics, wearables, personal context, and medical records so your health data finally tells a coherent story.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── Pod 1: Fluid Precision ── -->
+<section class="section section-light">
+  <div class="container">
+    <div class="pod-section">
+      <div class="pod-content">
+        <div class="pod-tag teal"><span class="pod-tag-dot"></span>01 · Live Now</div>
+        <h2>Fluid Precision</h2>
+        <p>At-home urinalysis with patented test strip technology. Scan your strip with your phone camera — Wave reads up to 8 biomarkers in seconds. No lab, no waiting room, no referral required.</p>
+        <p>Results are stored in your secure data store, tracked over time, and interpreted alongside your wearable data and personal context. Not just a number — a pattern.</p>
+        <ul class="pod-feature-list">
+          <li><span class="pod-check teal-c"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="#2F6E73" stroke-width="1.8" stroke-linecap="round"><polyline points="2,6 4.5,8.5 10,3"/></svg></span><span class="lbl"><strong>8 biomarkers:</strong> Glucose, protein, pH, ketones, nitrites, leukocytes, specific gravity, blood</span></li>
+          <li><span class="pod-check teal-c"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="#2F6E73" stroke-width="1.8" stroke-linecap="round"><polyline points="2,6 4.5,8.5 10,3"/></svg></span><span class="lbl">95–100% validated accuracy against clinical lab benchmarks</span></li>
+          <li><span class="pod-check teal-c"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="#2F6E73" stroke-width="1.8" stroke-linecap="round"><polyline points="2,6 4.5,8.5 10,3"/></svg></span><span class="lbl">Longitudinal trending — spot changes before symptoms appear</span></li>
+          <li><span class="pod-check teal-c"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="#2F6E73" stroke-width="1.8" stroke-linecap="round"><polyline points="2,6 4.5,8.5 10,3"/></svg></span><span class="lbl">Secure share with your care team via one-time link</span></li>
+          <li><span class="pod-check teal-c"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="#2F6E73" stroke-width="1.8" stroke-linecap="round"><polyline points="2,6 4.5,8.5 10,3"/></svg></span><span class="lbl">Cycle-aware interpretation — context matters</span></li>
+        </ul>
+        <div class="pod-live-badge">Live Now</div>
+      </div>
+      <div class="pod-visual">
+        <div class="vis-card dark-card">
+          <div class="vis-card-header">
+            <span class="vis-card-title">Fluid Precision · Today</span>
+            <span class="vis-badge green">All Normal</span>
+          </div>
+          <div class="ua-analyte-grid">
+            <div class="ua-item"><div class="ua-item-name">Glucose</div><div class="ua-item-val ok">NEG</div></div>
+            <div class="ua-item"><div class="ua-item-name">Protein</div><div class="ua-item-val ok">NEG</div></div>
+            <div class="ua-item"><div class="ua-item-name">pH</div><div class="ua-item-val ok">6.0</div></div>
+            <div class="ua-item"><div class="ua-item-name">Ketones</div><div class="ua-item-val tr">TR</div></div>
+            <div class="ua-item"><div class="ua-item-name">Nitrites</div><div class="ua-item-val ok">NEG</div></div>
+            <div class="ua-item"><div class="ua-item-name">Leukocytes</div><div class="ua-item-val ok">NEG</div></div>
+            <div class="ua-item"><div class="ua-item-name">Sp. Gravity</div><div class="ua-item-val ok">1.015</div></div>
+            <div class="ua-item"><div class="ua-item-name">Blood</div><div class="ua-item-val ok">NEG</div></div>
+          </div>
+          <div class="ua-detail">
+            <div class="ua-detail-row"><span class="ua-detail-key">Interpretation</span><span class="ua-detail-val" style="color:#34D399;">Well hydrated</span></div>
+            <div class="ua-detail-row"><span class="ua-detail-key">Ketone trace</span><span class="ua-detail-val" style="color:#FCD34D;">Likely overnight fast</span></div>
+            <div class="ua-detail-row"><span class="ua-detail-key">Next suggested test</span><span class="ua-detail-val">In 7 days</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Pod 2: DailySignal ── -->
+<section class="section section-dark">
+  <div class="topo-wrap">
+    <svg viewBox="0 0 1400 700" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+      <g fill="none" stroke="white" stroke-width="1">
+        <ellipse cx="200" cy="350" rx="420" ry="280" transform="rotate(6 200 350)"/>
+        <ellipse cx="200" cy="350" rx="335" ry="215" transform="rotate(6 200 350)"/>
+        <ellipse cx="200" cy="350" rx="255" ry="152" transform="rotate(6 200 350)"/>
+        <ellipse cx="200" cy="350" rx="175" ry="95" transform="rotate(6 200 350)"/>
+      </g>
+    </svg>
+  </div>
+  <div class="container">
+    <div class="pod-section reverse">
+      <div class="pod-content">
+        <div class="pod-tag blue"><span class="pod-tag-dot"></span>02 · Live Now</div>
+        <h2 style="color:var(--platinum);">DailySignal</h2>
+        <p class="dark">Your wearable data deserves context. DailySignal syncs heart rate, HRV, sleep stages, activity, and resting energy from your favourite devices — and interprets it all together, not in silos.</p>
+        <p class="dark">When your HRV drops and your urinalysis shows elevated leukocytes, Wave notices. That kind of connection is only possible when all your data lives in one place.</p>
+        <ul class="pod-feature-list">
+          <li><span class="pod-check blue-c"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="#0EA5E9" stroke-width="1.8" stroke-linecap="round"><polyline points="2,6 4.5,8.5 10,3"/></svg></span><span class="lbl-d"><strong>Live integrations:</strong> Apple Health, Samsung Health, Oura, WHOOP, Strava, Nuralogix</span></li>
+          <li><span class="pod-check blue-c"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="#0EA5E9" stroke-width="1.8" stroke-linecap="round"><polyline points="2,6 4.5,8.5 10,3"/></svg></span><span class="lbl-d">HRV trend analysis with cycle-phase context</span></li>
+          <li><span class="pod-check blue-c"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="#0EA5E9" stroke-width="1.8" stroke-linecap="round"><polyline points="2,6 4.5,8.5 10,3"/></svg></span><span class="lbl-d">Cross-signal pattern detection — connecting dots across data sources</span></li>
+          <li><span class="pod-check blue-c"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="#0EA5E9" stroke-width="1.8" stroke-linecap="round"><polyline points="2,6 4.5,8.5 10,3"/></svg></span><span class="lbl-d">Nuralogix face-scan: blood pressure, stress, and haemoglobin (Wave tier)</span></li>
+        </ul>
+        <div class="pod-live-badge">Live Now</div>
+      </div>
+      <div class="pod-visual">
+        <div class="vis-card dark-card">
+          <div class="vis-card-header">
+            <span class="vis-card-title">DailySignal</span>
+            <span class="vis-badge blue">Synced</span>
+          </div>
+          <div class="wearable-row">
+            <div class="wr-left">
+              <div class="wr-icon blue"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0EA5E9" stroke-width="2" stroke-linecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+              <div><div class="wr-name">Heart Rate</div><div class="wr-sub">Resting</div></div>
+            </div>
+            <div><div class="wr-val">62 bpm</div><div class="wr-delta up">↓ 4 below avg</div></div>
+          </div>
+          <div class="wearable-row">
+            <div class="wr-left">
+              <div class="wr-icon green"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
+              <div><div class="wr-name">HRV Score</div><div class="wr-sub">RMSSD</div></div>
+            </div>
+            <div><div class="wr-val">48 ms</div><div class="wr-delta up">↑ Excellent</div></div>
+          </div>
+          <div class="wearable-row">
+            <div class="wr-left">
+              <div class="wr-icon purple"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></div>
+              <div><div class="wr-name">Sleep</div><div class="wr-sub">Last night</div></div>
+            </div>
+            <div><div class="wr-val">7h 22m</div><div class="wr-delta up">↑ Deep +18%</div></div>
+          </div>
+          <div class="wearable-row">
+            <div class="wr-left">
+              <div class="wr-icon orange"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F0721B" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/></svg></div>
+              <div><div class="wr-name">Active Energy</div><div class="wr-sub">Today</div></div>
+            </div>
+            <div><div class="wr-val">412 kcal</div><div class="wr-delta neutral">On track</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Pod 3: Fluid+Me ── -->
+<section class="section section-light">
+  <div class="container">
+    <div class="pod-section">
+      <div class="pod-content">
+        <div class="pod-tag orange"><span class="pod-tag-dot"></span>03 · Live Now</div>
+        <h2>Fluid+Me</h2>
+        <p>The context that makes everything make sense. Fluid+Me captures your cycle, symptoms, mood, medications, sleep quality, and lifestyle — the personal factors that shape how you feel and what your numbers mean.</p>
+        <p>Your Fluid+Me data never leaves your secure store without your explicit permission. It lives in your encrypted data store, not on a shared platform.</p>
+        <ul class="pod-feature-list">
+          <li><span class="pod-check orange-c"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="#F0721B" stroke-width="1.8" stroke-linecap="round"><polyline points="2,6 4.5,8.5 10,3"/></svg></span><span class="lbl">Menstrual cycle tracking with phase-aware AI insights</span></li>
+          <li><span class="pod-check orange-c"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="#F0721B" stroke-width="1.8" stroke-linecap="round"><polyline points="2,6 4.5,8.5 10,3"/></svg></span><span class="lbl">Symptom journalling — headaches, fatigue, pain, mood shifts</span></li>
+          <li><span class="pod-check orange-c"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="#F0721B" stroke-width="1.8" stroke-linecap="round"><polyline points="2,6 4.5,8.5 10,3"/></svg></span><span class="lbl">Medication and supplement logging</span></li>
+          <li><span class="pod-check orange-c"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="#F0721B" stroke-width="1.8" stroke-linecap="round"><polyline points="2,6 4.5,8.5 10,3"/></svg></span><span class="lbl">Nutrition and hydration markers</span></li>
+          <li><span class="pod-check orange-c"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="#F0721B" stroke-width="1.8" stroke-linecap="round"><polyline points="2,6 4.5,8.5 10,3"/></svg></span><span class="lbl">Your data, isolated in your own encrypted store — zero cross-contamination</span></li>
+        </ul>
+        <div class="pod-live-badge">Live Now</div>
+      </div>
+      <div class="pod-visual">
+        <div class="vis-card light-card">
+          <div class="vis-card-header">
+            <span class="vis-card-title-d">Fluid+Me · Today</span>
+            <span class="vis-badge teal">Day 8</span>
+          </div>
+          <div class="context-tag-grid">
+            <div class="ctx-tag pink">Cycle: Follicular</div>
+            <div class="ctx-tag sage">Energy: High</div>
+            <div class="ctx-tag soft">Mood: Good</div>
+            <div class="ctx-tag soft">Headache: None</div>
+            <div class="ctx-tag soft">Sleep quality: 8/10</div>
+            <div class="ctx-tag sage">Hydration: Good</div>
+          </div>
+          <div class="ctx-insight">
+            <div class="ctx-insight-lbl">Wave AI · Context</div>
+            <div class="ctx-insight-text">Follicular phase day 8 is typically your peak energy window. Your HRV confirms it — up 18% from last week. This is a great time for demanding physical or cognitive work.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Pod 4: My Records ── -->
+<section class="section section-dark">
+  <div class="topo-wrap">
+    <svg viewBox="0 0 1400 700" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+      <g fill="none" stroke="white" stroke-width="1">
+        <ellipse cx="1200" cy="350" rx="380" ry="260" transform="rotate(-8 1200 350)"/>
+        <ellipse cx="1200" cy="350" rx="300" ry="195" transform="rotate(-8 1200 350)"/>
+        <ellipse cx="1200" cy="350" rx="220" ry="135" transform="rotate(-8 1200 350)"/>
+      </g>
+    </svg>
+  </div>
+  <div class="container">
+    <div class="pod-section reverse">
+      <div class="pod-content">
+        <div class="pod-tag purple"><span class="pod-tag-dot"></span>04 · Coming 2027</div>
+        <h2 style="color:var(--platinum);">My Records</h2>
+        <p class="dark">Upload your lab results, prescriptions, imaging reports, referral letters, and discharge summaries. Wave reads them with AI, extracts the key values, and connects them to your live health data.</p>
+        <p class="dark">Ask anything: "What was my cholesterol last year?" "Has my iron improved?" "Can you summarise this for my GP?" Wave finds the answer — instantly.</p>
+        <ul class="pod-feature-list">
+          <li><span class="pod-check purple-c"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="#8B5CF6" stroke-width="1.8" stroke-linecap="round"><polyline points="2,6 4.5,8.5 10,3"/></svg></span><span class="lbl-d">AI-powered OCR reads and indexes any document format</span></li>
+          <li><span class="pod-check purple-c"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="#8B5CF6" stroke-width="1.8" stroke-linecap="round"><polyline points="2,6 4.5,8.5 10,3"/></svg></span><span class="lbl-d">Natural language search across your entire medical history</span></li>
+          <li><span class="pod-check purple-c"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="#8B5CF6" stroke-width="1.8" stroke-linecap="round"><polyline points="2,6 4.5,8.5 10,3"/></svg></span><span class="lbl-d">Secure one-time share links for practitioners</span></li>
+          <li><span class="pod-check purple-c"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="#8B5CF6" stroke-width="1.8" stroke-linecap="round"><polyline points="2,6 4.5,8.5 10,3"/></svg></span><span class="lbl-d">Export your full health record at any time — it's always yours</span></li>
+        </ul>
+        <div class="pod-coming-badge">Coming 2027</div>
+      </div>
+      <div class="pod-visual">
+        <div class="vis-card dark-card">
+          <div class="vis-card-header">
+            <span class="vis-card-title">My Records</span>
+            <span class="vis-badge purple">4 documents</span>
+          </div>
+          <div class="doc-list-item">
+            <div class="doc-icon-sm"><span>PDF</span></div>
+            <div style="flex:1;min-width:0;"><div class="doc-name-sm">Blood Panel — March 2026</div><div class="doc-meta-sm">Dr. Chen · 12 fields extracted</div></div>
+            <div class="doc-status-sm">Indexed</div>
+          </div>
+          <div class="doc-list-item">
+            <div class="doc-icon-sm"><span>PDF</span></div>
+            <div style="flex:1;min-width:0;"><div class="doc-name-sm">Thyroid Function — Jan 2026</div><div class="doc-meta-sm">LifeLabs · 5 fields extracted</div></div>
+            <div class="doc-status-sm">Indexed</div>
+          </div>
+          <div class="doc-list-item">
+            <div class="doc-icon-sm"><span>IMG</span></div>
+            <div style="flex:1;min-width:0;"><div class="doc-name-sm">Vitamin D + Iron — Dec 2025</div><div class="doc-meta-sm">Walk-in clinic · 3 fields extracted</div></div>
+            <div class="doc-status-sm">Indexed</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Multi-Profile ── -->
+<section class="section section-light section-pad">
+  <div class="container">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;">
+      <div>
+        <div class="eyebrow">Family &amp; Care</div>
+        <h2>One account, everyone you care about.</h2>
+        <p style="color:rgba(55,56,58,0.65);margin-top:1rem;line-height:1.72;">Wave's multi-profile architecture lets you manage health data for family members, elderly parents, or anyone in your care — each with their own isolated data store, their own privacy, and their own permissions.</p>
+        <p style="color:rgba(55,56,58,0.65);margin-top:1rem;line-height:1.72;">You control what you see. They control what they share. No data leaks between profiles.</p>
+        <a href="fluidmedical-contact.html" style="display:inline-flex;margin-top:2rem;" class="btn btn-outline-dark">Talk to Us About Family Plans</a>
+      </div>
+      <div>
+        <div class="multi-profile-visual">
+          <div class="profile-pill">
+            <div class="profile-avatar pa-teal">S</div>
+            <div><div class="profile-info-name">Sarah (You)</div><div class="profile-info-role">Full access</div></div>
+            <div class="profile-active"></div>
+          </div>
+        </div>
+        <div class="multi-profile-visual" style="margin-top:0.75rem;">
+          <div class="profile-pill">
+            <div class="profile-avatar pa-tangerine">M</div>
+            <div><div class="profile-info-name">Mum</div><div class="profile-info-role">View results only</div></div>
+          </div>
+          <div class="profile-pill">
+            <div class="profile-avatar pa-sage">J</div>
+            <div><div class="profile-info-name">Jake</div><div class="profile-info-role">Shared DailySignal</div></div>
+          </div>
+        </div>
+        <div class="multi-profile-visual" style="margin-top:0.75rem;">
+          <div class="profile-pill" style="opacity:0.55;border-style:dashed;">
+            <div class="profile-avatar" style="background:#E2E8F0;color:#94A3B8;">+</div>
+            <div><div class="profile-info-name">Add profile</div><div class="profile-info-role">Wave tier</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Tier Comparison ── -->
+<section class="section section-dark section-pad">
+  <div class="topo-wrap">
+    <svg viewBox="0 0 1400 600" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+      <g fill="none" stroke="white" stroke-width="1">
+        <ellipse cx="700" cy="300" rx="650" ry="260" transform="rotate(-4 700 300)"/>
+        <ellipse cx="700" cy="300" rx="560" ry="200" transform="rotate(-4 700 300)"/>
+        <ellipse cx="700" cy="300" rx="470" ry="145" transform="rotate(-4 700 300)"/>
+        <ellipse cx="700" cy="300" rx="380" ry="95" transform="rotate(-4 700 300)"/>
+      </g>
+    </svg>
+  </div>
+  <div class="container">
+    <div class="eyebrow eyebrow-light" style="margin-bottom:0.75rem;">Plan Comparison</div>
+    <h2 style="color:var(--platinum);margin-bottom:0.5rem;">Choose your plan.</h2>
+    <p style="color:rgba(236,229,223,0.62);margin-bottom:0;">All plans include full data sovereignty — your data is always yours.</p>
+    <div class="tier-table-wrap">
+      <table class="tier-table">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>Wave Mini<br><span style="font-size:0.8rem;font-weight:400;color:rgba(236,229,223,0.45);">Free · Q3 2026</span></th>
+            <th class="featured-col">Wave<br><span style="font-size:0.8rem;font-weight:400;color:rgba(47,110,115,0.7);">Q1 2027</span></th>
+            <th>Live Forever<br><span style="font-size:0.8rem;font-weight:400;color:rgba(236,229,223,0.45);">Q3 2027</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Fluid Precision (8 biomarkers)</td><td><span class="check-yes">✓</span></td><td class="featured-col"><span class="check-yes">✓</span></td><td><span class="check-yes">✓</span></td></tr>
+          <tr><td>DailySignal wearable sync</td><td><span class="check-yes">✓</span></td><td class="featured-col"><span class="check-yes">✓</span></td><td><span class="check-yes">✓</span></td></tr>
+          <tr><td>Fluid+Me personal context</td><td><span class="check-yes">✓</span></td><td class="featured-col"><span class="check-yes">✓</span></td><td><span class="check-yes">✓</span></td></tr>
+          <tr><td>Basic Wave AI insights</td><td><span class="check-yes">✓</span></td><td class="featured-col"><span class="check-yes">✓</span></td><td><span class="check-yes">✓</span></td></tr>
+          <tr><td>My Records (AI document reader)</td><td><span class="check-no">—</span></td><td class="featured-col"><span class="check-yes">✓</span></td><td><span class="check-yes">✓</span></td></tr>
+          <tr><td>Multi-profile (family)</td><td><span class="check-no">—</span></td><td class="featured-col"><span class="check-yes">✓</span></td><td><span class="check-yes">✓</span></td></tr>
+          <tr><td>Nuralogix face-scan vitals</td><td><span class="check-no">—</span></td><td class="featured-col"><span class="check-yes">✓</span></td><td><span class="check-yes">✓</span></td></tr>
+          <tr><td>Advanced trend analysis</td><td><span class="check-no">—</span></td><td class="featured-col"><span class="check-yes">✓</span></td><td><span class="check-yes">✓</span></td></tr>
+          <tr><td>Extended biomarker panel</td><td><span class="check-no">—</span></td><td class="featured-col"><span class="check-no">—</span></td><td><span class="check-yes">✓</span></td></tr>
+          <tr><td>Longitudinal health modelling</td><td><span class="check-no">—</span></td><td class="featured-col"><span class="check-no">—</span></td><td><span class="check-yes">✓</span></td></tr>
+          <tr><td>Practitioner sharing portal</td><td><span class="check-no">—</span></td><td class="featured-col"><span class="check-no">—</span></td><td><span class="check-yes">✓</span></td></tr>
+          <tr><td>Annual health report</td><td><span class="check-no">—</span></td><td class="featured-col"><span class="check-no">—</span></td><td><span class="check-yes">✓</span></td></tr>
+          <tr><td>Data sovereignty (always yours)</td><td><span class="check-yes">✓</span></td><td class="featured-col"><span class="check-yes">✓</span></td><td><span class="check-yes">✓</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="margin-top:2rem;text-align:center;">
+      <a href="fluidmedical-contact.html" class="btn btn-primary">Get Wave Mini — Free →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── Integrations ── -->
+<section class="section section-light section-pad">
+  <div class="container">
+    <div class="eyebrow">Integrations</div>
+    <h2 style="margin-bottom:0.5rem;">Connects to the tools you already use.</h2>
+    <p style="color:rgba(55,56,58,0.62);max-width:580px;">Wave syncs with your existing wearables and health apps — no manual data entry. More integrations being added regularly.</p>
+    <div class="integrations-grid" style="margin-top:2.5rem;">
+      <div style="color:var(--charcoal);" class="integration-card" style="background:white;">
+        <div class="int-icon" style="background:#000;border-radius:12px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg></div>
+        <div style="font-weight:600;color:var(--charcoal);">Apple Health</div>
+        <div style="font-size:0.875rem;color:rgba(55,56,58,0.58);">Heart rate, HRV, sleep, steps, VO2 max</div>
+        <div class="int-status live">Live</div>
+      </div>
+      <div class="integration-card" style="background:white;">
+        <div class="int-icon" style="background:#1428A0;border-radius:12px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="white"><rect x="4" y="4" width="7" height="7" rx="1"/><rect x="13" y="4" width="7" height="7" rx="1"/><rect x="4" y="13" width="7" height="7" rx="1"/><rect x="13" y="13" width="7" height="7" rx="1"/></svg></div>
+        <div style="font-weight:600;color:var(--charcoal);">Samsung Health</div>
+        <div style="font-size:0.875rem;color:rgba(55,56,58,0.58);">Heart rate, sleep, body composition</div>
+        <div class="int-status live">Live</div>
+      </div>
+      <div class="integration-card" style="background:white;">
+        <div class="int-icon" style="background:#2D9B4A;border-radius:12px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div>
+        <div style="font-weight:600;color:var(--charcoal);">Oura Ring</div>
+        <div style="font-size:0.875rem;color:rgba(55,56,58,0.58);">Sleep stages, readiness, HRV, temperature</div>
+        <div class="int-status live">Live</div>
+      </div>
+      <div class="integration-card" style="background:white;">
+        <div class="int-icon" style="background:#E13F3F;border-radius:12px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+        <div style="font-weight:600;color:var(--charcoal);">WHOOP</div>
+        <div style="font-size:0.875rem;color:rgba(55,56,58,0.58);">Strain, recovery, sleep, HRV</div>
+        <div class="int-status live">Live</div>
+      </div>
+      <div class="integration-card" style="background:white;">
+        <div class="int-icon" style="background:#FC4C02;border-radius:12px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M13.49 5.48c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm-3.6 13.9l1-4.4 2.1 2v6h2v-7.5l-2.1-2 .6-3c1.3 1.5 3.3 2.5 5.5 2.5v-2c-1.9 0-3.5-1-4.3-2.4l-1-1.6c-.4-.6-1-1-1.7-1-.3 0-.5.1-.8.1l-5.2 2.2v4.7h2v-3.4l1.8-.7-1.6 8.1-4.9-1-.4 2 7 1.4z"/></svg></div>
+        <div style="font-weight:600;color:var(--charcoal);">Strava</div>
+        <div style="font-size:0.875rem;color:rgba(55,56,58,0.58);">Activity, training load, performance</div>
+        <div class="int-status live">Live</div>
+      </div>
+      <div class="integration-card" style="background:white;">
+        <div class="int-icon" style="background:var(--teal);border-radius:12px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+        <div style="font-weight:600;color:var(--charcoal);">Nuralogix</div>
+        <div style="font-size:0.875rem;color:rgba(55,56,58,0.58);">Blood pressure, stress, haemoglobin via face scan</div>
+        <div class="int-status live">Live (Wave tier)</div>
+      </div>
+    </div>
+    <p style="margin-top:1.5rem;font-size:0.875rem;color:rgba(55,56,58,0.5);">More integrations coming soon: Google Fit, Garmin, Withings, Fitbit, and more.</p>
+  </div>
+</section>
+
+<!-- ── Footer ── -->
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <div>
+        <div class="footer-logo">Fluid Medical</div>
+        <p class="footer-tagline">Primary Health Care Within Reach. Built on Fluid Scientific's sovereign data infrastructure. Vancouver, Canada.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Platform</h5>
+        <a href="fluidmedical-platform.html">Fluid Precision</a>
+        <a href="fluidmedical-platform.html">DailySignal</a>
+        <a href="fluidmedical-platform.html">Fluid+Me</a>
+        <a href="fluidmedical-platform.html">My Records</a>
+        <a href="fluidmedical-demo.html">Live Demo</a>
+      </div>
+      <div class="footer-col">
+        <h5>Company</h5>
+        <a href="fluidmedical-about.html">About Us</a>
+        <a href="fluidmedical-security.html">Security &amp; Data</a>
+        <a href="fluidmedical-contact.html">Contact</a>
+        <a href="https://fluidscientific.com" target="_blank">Fluid Scientific ↗</a>
+      </div>
+      <div class="footer-col">
+        <h5>Get Wave</h5>
+        <a href="fluidmedical-contact.html">Individuals</a>
+        <a href="fluidmedical-contact.html">Organisations</a>
+        <a href="fluidmedical-contact.html">Investors &amp; Media</a>
+        <a href="mailto:info@fluidmedical.com">info@fluidmedical.com</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2026 Fluid Medical Inc. Vancouver, BC, Canada.</div>
+      <div class="footer-legal"><a href="#">Privacy Policy</a><a href="#">Terms of Service</a><a href="#">Accessibility</a></div>
+    </div>
+  </div>
+</footer>
+
+<script>
+function toggleMenu() { document.getElementById('mobileMenu').classList.toggle('open'); }
+document.querySelectorAll('.mobile-menu a').forEach(l => l.addEventListener('click', () => { document.getElementById('mobileMenu').classList.remove('open'); }));
+window.addEventListener('scroll', () => { document.getElementById('mainNav').style.boxShadow = window.scrollY > 10 ? '0 4px 20px rgba(0,0,0,0.35)' : 'none'; });
+</script>
+</body>
+</html>

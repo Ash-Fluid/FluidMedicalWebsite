@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Security &amp; Data — Fluid Medical</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --charcoal: #37383A; --platinum: #ECE5DF; --teal: #2F6E73;
+  --sage: #A2B7B0; --tangerine: #F0721B; --blush: #ECC8BC; --white: #ffffff;
+  --nav-h: 72px;
+}
+html { scroll-behavior: smooth; }
+body { font-family: 'DM Sans', system-ui, sans-serif; background: var(--platinum); color: var(--charcoal); line-height: 1.65; -webkit-font-smoothing: antialiased; }
+a { color: inherit; text-decoration: none; }
+h1, h2, h3, h4 { font-family: 'DM Serif Display', Georgia, serif; line-height: 1.15; }
+h1 { font-size: clamp(2.4rem, 6vw, 4.5rem); letter-spacing: -0.02em; }
+h2 { font-size: clamp(1.8rem, 4vw, 3rem); letter-spacing: -0.015em; }
+h3 { font-size: clamp(1.2rem, 2.5vw, 1.6rem); }
+p { font-size: 1.0625rem; }
+
+/* ── Nav ── */
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: var(--nav-h); display: flex; align-items: center; justify-content: space-between; padding: 0 clamp(1.5rem, 5vw, 4rem); background: rgba(55,56,58,0.97); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255,255,255,0.07); transition: box-shadow 0.3s; }
+.nav-logo { font-family: 'DM Serif Display', serif; font-size: 1.5rem; color: var(--platinum); letter-spacing: -0.02em; display: flex; align-items: center; gap: 10px; }
+.nav-logo-mark { width: 32px; height: 32px; background: var(--teal); border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+.nav-links { display: flex; align-items: center; gap: 2rem; }
+.nav-links a { color: rgba(236,229,223,0.7); font-size: 0.9375rem; font-weight: 500; transition: color 0.2s; }
+.nav-links a:hover, .nav-links a.active { color: var(--platinum); }
+.btn-nav { background: var(--teal); color: var(--white); padding: 0.5rem 1.25rem; border-radius: 8px; font-size: 0.9375rem; font-weight: 600; transition: background 0.2s, transform 0.15s; }
+.btn-nav:hover { background: #246063; transform: translateY(-1px); }
+.hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; background: none; border: none; }
+.hamburger span { display: block; width: 22px; height: 2px; background: var(--platinum); border-radius: 2px; }
+.mobile-menu { display: none; position: fixed; top: var(--nav-h); left: 0; right: 0; z-index: 99; background: var(--charcoal); padding: 1.5rem 2rem 2rem; flex-direction: column; gap: 0.25rem; border-bottom: 1px solid rgba(255,255,255,0.1); }
+.mobile-menu.open { display: flex; }
+.mobile-menu a { color: var(--platinum); font-size: 1rem; font-weight: 500; padding: 0.65rem 0; border-bottom: 1px solid rgba(255,255,255,0.07); }
+.mobile-menu .btn-nav { margin-top: 0.75rem; justify-content: center; border-bottom: none; }
+
+/* ── Layout ── */
+.topo-wrap { position: absolute; inset: 0; overflow: hidden; pointer-events: none; opacity: 0.09; z-index: 0; }
+.topo-wrap svg { width: 100%; height: 100%; }
+.section { position: relative; overflow: hidden; }
+.section-dark { background: var(--charcoal); color: var(--platinum); }
+.section-light { background: var(--platinum); color: var(--charcoal); }
+.container { max-width: 1100px; margin: 0 auto; padding: 0 clamp(1.5rem, 5vw, 4rem); position: relative; z-index: 1; }
+.container-narrow { max-width: 800px; margin: 0 auto; padding: 0 clamp(1.5rem, 5vw, 4rem); position: relative; z-index: 1; }
+.section-pad { padding: clamp(5rem, 10vw, 9rem) 0; }
+.eyebrow { font-size: 0.8125rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.75rem; }
+.eyebrow-teal { color: var(--teal); }
+.eyebrow-sage { color: var(--sage); }
+
+/* ── Buttons ── */
+.btn { display: inline-flex; align-items: center; gap: 8px; padding: 0.85rem 1.75rem; border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 1rem; font-weight: 600; cursor: pointer; border: none; transition: background 0.2s, transform 0.15s, box-shadow 0.2s; text-decoration: none; }
+.btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.18); }
+.btn-primary { background: var(--teal); color: var(--white); }
+.btn-primary:hover { background: #246063; }
+.btn-outline-light { background: transparent; color: var(--platinum); border: 2px solid rgba(236,229,223,0.35); }
+.btn-outline-light:hover { border-color: var(--platinum); background: rgba(236,229,223,0.08); box-shadow: none; }
+
+/* ── Hero ── */
+.page-hero { background: var(--charcoal); color: var(--platinum); padding: calc(var(--nav-h) + 5rem) 0 5rem; position: relative; overflow: hidden; }
+.page-hero h1 em { font-style: italic; color: var(--blush); }
+.page-hero-sub { font-size: clamp(1rem, 2vw, 1.2rem); color: rgba(236,229,223,0.7); margin-top: 1.25rem; line-height: 1.72; max-width: 640px; }
+
+/* ── Problem Section ── */
+.problem-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; margin-top: 3rem; }
+.problem-card { border-radius: 14px; padding: 1.75rem; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); }
+.problem-card-icon { width: 44px; height: 44px; border-radius: 12px; background: rgba(240,114,27,0.15); display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; }
+.problem-card h4 { color: var(--platinum); margin-bottom: 0.6rem; font-family: 'DM Serif Display', serif; font-size: 1.15rem; }
+.problem-card p { color: rgba(236,229,223,0.6); font-size: 0.9375rem; line-height: 1.65; }
+.contrast-text { color: var(--tangerine); font-weight: 700; }
+
+/* ── Sovereign Data ── */
+.sovereign-visual {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem;
+  margin: 3rem 0;
+}
+.user-pod {
+  border-radius: 16px; padding: 1.5rem;
+  border: 2px solid rgba(47,110,115,0.3);
+  background: rgba(47,110,115,0.06);
+  text-align: center; position: relative; overflow: hidden;
+}
+.user-pod.highlighted { border-color: var(--teal); background: rgba(47,110,115,0.12); }
+.user-pod-avatar { width: 52px; height: 52px; border-radius: 50%; margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 20px; color: white; }
+.upa-teal { background: var(--teal); }
+.upa-sage { background: var(--sage); }
+.upa-blush { background: #C45A3A; }
+.user-pod-name { color: var(--charcoal); font-weight: 600; font-size: 1rem; margin-bottom: 0.5rem; }
+.user-pod-lock { display: inline-flex; align-items: center; gap: 5px; font-size: 0.78rem; font-weight: 600; padding: 0.25rem 0.65rem; border-radius: 100px; background: rgba(47,110,115,0.12); color: var(--teal); }
+.user-pod-barrier {
+  display: flex; align-items: center; justify-content: center;
+  padding: 0 0.25rem;
+  color: rgba(55,56,58,0.25); font-size: 1.5rem; font-weight: 300;
+}
+
+/* ── 4 Pillars ── */
+.pillars-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-top: 3rem; }
+.pillar-card {
+  border-radius: 16px; padding: 2.25rem;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  position: relative; overflow: hidden;
+  transition: border-color 0.3s, transform 0.3s;
+}
+.pillar-card:hover { border-color: rgba(47,110,115,0.4); transform: translateY(-3px); }
+.pillar-number {
+  font-family: 'DM Serif Display', serif;
+  font-size: 3.5rem; color: rgba(47,110,115,0.25); line-height: 1;
+  margin-bottom: 1rem; position: absolute; top: 1.5rem; right: 1.75rem;
+}
+.pillar-icon { width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; margin-bottom: 1.25rem; }
+.pillar-icon.teal { background: rgba(47,110,115,0.2); }
+.pillar-icon.blush { background: rgba(236,200,188,0.2); }
+.pillar-icon.sage { background: rgba(162,183,176,0.2); }
+.pillar-icon.tangerine { background: rgba(240,114,27,0.15); }
+.pillar-title { font-family: 'DM Serif Display', serif; font-size: 1.4rem; color: var(--platinum); margin-bottom: 0.75rem; }
+.pillar-desc { color: rgba(236,229,223,0.65); font-size: 0.9375rem; line-height: 1.68; }
+
+/* ── Fluid Scientific ── */
+.sci-card {
+  border-radius: 20px; padding: clamp(2.5rem, 5vw, 4rem);
+  background: var(--charcoal);
+  border: 1px solid rgba(255,255,255,0.08);
+  position: relative; overflow: hidden;
+}
+.sci-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+.sci-logo-wrap {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 1.5rem;
+}
+.sci-logo-mark { width: 44px; height: 44px; background: var(--teal); border-radius: 12px; display: flex; align-items: center; justify-content: center; }
+.sci-logo-name { font-family: 'DM Serif Display', serif; font-size: 1.3rem; color: var(--platinum); }
+.sci-desc { color: rgba(236,229,223,0.68); line-height: 1.72; margin-bottom: 1.5rem; font-size: 1.0625rem; }
+.sci-industries { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 1.5rem; }
+.sci-industry { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1); color: rgba(236,229,223,0.7); font-size: 0.8125rem; font-weight: 600; padding: 0.3rem 0.8rem; border-radius: 8px; }
+.sci-stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+.sci-stat { background: rgba(255,255,255,0.05); border-radius: 14px; padding: 1.5rem; border: 1px solid rgba(255,255,255,0.08); }
+.sci-stat-num { font-family: 'DM Serif Display', serif; font-size: 2rem; color: var(--platinum); margin-bottom: 0.25rem; }
+.sci-stat-label { color: rgba(236,229,223,0.55); font-size: 0.875rem; }
+
+/* ── Org Compliance ── */
+.compliance-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-top: 3rem; }
+.compliance-card { border-radius: 14px; padding: 1.75rem; background: white; border: 1px solid rgba(55,56,58,0.1); box-shadow: 0 2px 12px rgba(55,56,58,0.06); transition: transform 0.3s, box-shadow 0.3s; }
+.compliance-card:hover { transform: translateY(-3px); box-shadow: 0 8px 32px rgba(55,56,58,0.1); }
+.compliance-icon { width: 44px; height: 44px; border-radius: 12px; background: rgba(47,110,115,0.1); display: flex; align-items: center; justify-content: center; margin-bottom: 1.25rem; }
+.compliance-title { font-family: 'DM Serif Display', serif; font-size: 1.2rem; margin-bottom: 0.6rem; }
+.compliance-desc { font-size: 0.9375rem; color: rgba(55,56,58,0.65); line-height: 1.65; }
+.compliance-badge { display: inline-block; background: rgba(47,110,115,0.1); color: var(--teal); font-size: 0.72rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 5px; margin-top: 1rem; letter-spacing: 0.05em; text-transform: uppercase; }
+
+/* ── CTA ── */
+.cta-strip { background: var(--teal); color: white; padding: 5rem 0; text-align: center; }
+.cta-strip h2 { color: white; margin-bottom: 1rem; }
+.cta-strip p { color: rgba(255,255,255,0.8); font-size: 1.1rem; max-width: 540px; margin: 0 auto 2.5rem; line-height: 1.7; }
+.btn-white { background: white; color: var(--teal); }
+.btn-white:hover { background: var(--platinum); }
+
+/* ── Footer ── */
+footer { background: var(--charcoal); color: rgba(236,229,223,0.55); padding: 3.5rem 0 2rem; }
+.footer-inner { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem; margin-bottom: 2.5rem; }
+.footer-logo { font-family: 'DM Serif Display', serif; font-size: 1.4rem; color: var(--platinum); margin-bottom: 0.75rem; }
+.footer-tagline { font-size: 0.875rem; line-height: 1.65; max-width: 280px; }
+.footer-col h5 { color: var(--platinum); font-size: 0.78rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 1rem; }
+.footer-col a { display: block; font-size: 0.9rem; margin-bottom: 0.5rem; color: rgba(236,229,223,0.5); transition: color 0.2s; }
+.footer-col a:hover { color: var(--platinum); }
+.footer-bottom { border-top: 1px solid rgba(255,255,255,0.08); padding-top: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+.footer-copy { color: rgba(236,229,223,0.35); font-size: 0.8125rem; }
+.footer-legal { display: flex; gap: 1.5rem; }
+.footer-legal a { color: rgba(236,229,223,0.35); font-size: 0.8125rem; transition: color 0.2s; }
+.footer-legal a:hover { color: rgba(236,229,223,0.65); }
+
+@media (max-width: 900px) {
+  .problem-grid { grid-template-columns: 1fr; }
+  .pillars-grid { grid-template-columns: 1fr; }
+  .sci-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+  .compliance-grid { grid-template-columns: 1fr 1fr; }
+  .footer-inner { grid-template-columns: 1fr 1fr; gap: 2rem; }
+  .sovereign-visual { grid-template-columns: 1fr; }
+  .user-pod-barrier { display: none; }
+}
+@media (max-width: 640px) {
+  .nav-links { display: none; }
+  .hamburger { display: flex; }
+  .compliance-grid { grid-template-columns: 1fr; }
+  .sci-stat-grid { grid-template-columns: 1fr; }
+  .footer-inner { grid-template-columns: 1fr; gap: 1.5rem; }
+}
+</style>
+</head>
+<body>
+
+<nav id="mainNav">
+  <a href="fluidmedical-home.html" class="nav-logo">
+    <div class="nav-logo-mark"><svg width="18" height="12" viewBox="0 0 24 16" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><path d="M2 8c0 0 3-6 6-6s5 12 8 12 6-6 6-6"/></svg></div>
+    Fluid Medical
+  </a>
+  <div class="nav-links">
+    <a href="fluidmedical-home.html">Home</a>
+    <a href="fluidmedical-platform.html">Platform</a>
+    <a href="fluidmedical-security.html" class="active">Security &amp; Data</a>
+    <a href="fluidmedical-about.html">About</a>
+    <a href="fluidmedical-contact.html">Contact</a>
+    <a href="fluidmedical-contact.html" class="btn-nav">Get Wave →</a>
+  </div>
+  <button class="hamburger" onclick="toggleMenu()" aria-label="Menu"><span></span><span></span><span></span></button>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="fluidmedical-home.html">Home</a>
+  <a href="fluidmedical-platform.html">Platform</a>
+  <a href="fluidmedical-security.html">Security &amp; Data</a>
+  <a href="fluidmedical-about.html">About</a>
+  <a href="fluidmedical-contact.html">Contact</a>
+  <a href="fluidmedical-contact.html" class="btn-nav">Get Wave →</a>
+</div>
+
+<!-- ── Hero ── -->
+<section class="page-hero section">
+  <div class="topo-wrap">
+    <svg viewBox="0 0 1400 600" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+      <g fill="none" stroke="white" stroke-width="1">
+        <ellipse cx="1100" cy="280" rx="520" ry="320" transform="rotate(-8 1100 280)"/>
+        <ellipse cx="1100" cy="280" rx="430" ry="252" transform="rotate(-8 1100 280)"/>
+        <ellipse cx="1100" cy="280" rx="340" ry="188" transform="rotate(-8 1100 280)"/>
+        <ellipse cx="1100" cy="280" rx="250" ry="128" transform="rotate(-8 1100 280)"/>
+        <ellipse cx="1100" cy="280" rx="165" ry="75" transform="rotate(-8 1100 280)"/>
+      </g>
+    </svg>
+  </div>
+  <div class="container-narrow">
+    <div class="eyebrow eyebrow-sage">Security &amp; Data</div>
+    <h1>Your health data<br>belongs to <em>you.</em></h1>
+    <p class="page-hero-sub">Most health platforms monetise your most sensitive information. Wave was built differently — on infrastructure designed for industries where data sovereignty is non-negotiable.</p>
+  </div>
+</section>
+
+<!-- ── Section 1: The Problem ── -->
+<section class="section section-dark section-pad">
+  <div class="topo-wrap">
+    <svg viewBox="0 0 1400 700" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+      <g fill="none" stroke="white" stroke-width="1">
+        <ellipse cx="200" cy="350" rx="400" ry="280" transform="rotate(6 200 350)"/>
+        <ellipse cx="200" cy="350" rx="315" ry="210" transform="rotate(6 200 350)"/>
+        <ellipse cx="200" cy="350" rx="235" ry="148" transform="rotate(6 200 350)"/>
+      </g>
+    </svg>
+  </div>
+  <div class="container">
+    <div class="eyebrow eyebrow-sage">The Problem</div>
+    <h2 style="color:var(--platinum);max-width:640px;margin-bottom:1rem;">Most platforms treat you as the product.</h2>
+    <p style="color:rgba(236,229,223,0.65);max-width:660px;line-height:1.72;font-size:1.0625rem;">Your health data is among the most sensitive information that exists. It tells insurers about your risk profile, tells advertisers about your vulnerabilities, and once it's out, you can't get it back. The industry's default is to harvest it, aggregate it, and sell it.</p>
+    <div class="problem-grid">
+      <div class="problem-card">
+        <div class="problem-card-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F0721B" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+        </div>
+        <h4>Data sold to advertisers</h4>
+        <p>Many consumer health apps share anonymised (and sometimes not-so-anonymised) data with ad networks. <span class="contrast-text">Your symptoms. Your cycle. Your diagnoses.</span> Sold to sell you things.</p>
+      </div>
+      <div class="problem-card">
+        <div class="problem-card-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F0721B" stroke-width="2" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        </div>
+        <h4>Shared with insurers</h4>
+        <p>Health data shared with or sold to insurance data brokers can affect your coverage, premiums, or eligibility. <span class="contrast-text">Without your knowledge or consent.</span></p>
+      </div>
+      <div class="problem-card">
+        <div class="problem-card-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F0721B" stroke-width="2" stroke-linecap="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </div>
+        <h4>No real control</h4>
+        <p>Terms of service are designed to obscure what's actually happening to your data. You click "agree" and hope for the best. <span class="contrast-text">That's not consent. That's resignation.</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Section 2: Sovereign Data ── -->
+<section class="section section-light section-pad">
+  <div class="container">
+    <div class="eyebrow eyebrow-teal">Sovereign Data</div>
+    <h2 style="margin-bottom:1rem;">One pod. Yours alone.</h2>
+    <p style="color:rgba(55,56,58,0.65);max-width:660px;line-height:1.72;font-size:1.0625rem;">Every Wave user has their own isolated data pod. Your health data doesn't live in a shared database alongside thousands of other users. It lives in a dedicated, encrypted store that belongs to you — and only you can authorise access to it.</p>
+
+    <div style="display:flex;align-items:center;gap:1.25rem;margin-top:3rem;flex-wrap:wrap;">
+      <div class="user-pod highlighted">
+        <div class="user-pod-avatar upa-teal">S</div>
+        <div class="user-pod-name">Sarah's Pod</div>
+        <div style="color:rgba(55,56,58,0.55);font-size:0.875rem;margin-bottom:0.75rem;">Isolated · Encrypted</div>
+        <div class="user-pod-lock">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+          Your data only
+        </div>
+      </div>
+      <div style="color:rgba(55,56,58,0.2);font-size:2rem;font-weight:100;">✕</div>
+      <div class="user-pod">
+        <div class="user-pod-avatar upa-sage">M</div>
+        <div class="user-pod-name">Maria's Pod</div>
+        <div style="color:rgba(55,56,58,0.55);font-size:0.875rem;margin-bottom:0.75rem;">Isolated · Encrypted</div>
+        <div class="user-pod-lock">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+          Maria's data only
+        </div>
+      </div>
+      <div style="color:rgba(55,56,58,0.2);font-size:2rem;font-weight:100;">✕</div>
+      <div class="user-pod">
+        <div class="user-pod-avatar upa-blush">J</div>
+        <div class="user-pod-name">James's Pod</div>
+        <div style="color:rgba(55,56,58,0.55);font-size:0.875rem;margin-bottom:0.75rem;">Isolated · Encrypted</div>
+        <div class="user-pod-lock">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+          James's data only
+        </div>
+      </div>
+    </div>
+
+    <div style="background:rgba(47,110,115,0.08);border:1px solid rgba(47,110,115,0.2);border-radius:14px;padding:1.5rem 2rem;margin-top:2.5rem;max-width:680px;">
+      <p style="font-size:1rem;color:var(--charcoal);line-height:1.72;"><strong>Zero cross-contamination.</strong> Your data cannot leak into another user's pod. There is no shared analytics layer, no pooled anonymisation, no aggregate data sale. Each pod is structurally isolated — not just policy-isolated.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── Section 3: 4 Pillars ── -->
+<section class="section section-dark section-pad">
+  <div class="topo-wrap">
+    <svg viewBox="0 0 1400 800" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+      <g fill="none" stroke="white" stroke-width="1">
+        <ellipse cx="700" cy="400" rx="650" ry="370" transform="rotate(-5 700 400)"/>
+        <ellipse cx="700" cy="400" rx="560" ry="295" transform="rotate(-5 700 400)"/>
+        <ellipse cx="700" cy="400" rx="470" ry="225" transform="rotate(-5 700 400)"/>
+        <ellipse cx="700" cy="400" rx="380" ry="162" transform="rotate(-5 700 400)"/>
+      </g>
+    </svg>
+  </div>
+  <div class="container">
+    <div class="eyebrow eyebrow-sage">Four Pillars</div>
+    <h2 style="color:var(--platinum);max-width:600px;margin-bottom:0.5rem;">How we protect your data.</h2>
+    <p style="color:rgba(236,229,223,0.6);max-width:600px;line-height:1.72;">These aren't promises. They're architectural decisions.</p>
+    <div class="pillars-grid">
+      <div class="pillar-card">
+        <div class="pillar-number">1</div>
+        <div class="pillar-icon teal">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2F6E73" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div class="pillar-title">Isolation</div>
+        <p class="pillar-desc">Your data pod is physically separated from every other user's data. Not just access-controlled — architecturally isolated. There is no route for your data to reach another user's pod, and vice versa.</p>
+      </div>
+      <div class="pillar-card">
+        <div class="pillar-number">2</div>
+        <div class="pillar-icon blush">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#C45A3A" stroke-width="2" stroke-linecap="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+        </div>
+        <div class="pillar-title">Consent-first</div>
+        <p class="pillar-desc">Every share requires your explicit, specific consent. You choose who sees what, and for how long. Consent can be revoked at any time, instantly. No blanket permissions. No hidden sharing.</p>
+      </div>
+      <div class="pillar-card">
+        <div class="pillar-number">3</div>
+        <div class="pillar-icon sage">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2F6E73" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        </div>
+        <div class="pillar-title">Portability</div>
+        <p class="pillar-desc">Your data is yours to take. Export your entire health record at any time, in standard formats. If you leave Wave, your data leaves with you — complete, unaltered, and immediately useful.</p>
+      </div>
+      <div class="pillar-card">
+        <div class="pillar-number">4</div>
+        <div class="pillar-icon tangerine">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#F0721B" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        </div>
+        <div class="pillar-title">Transparency</div>
+        <p class="pillar-desc">We publish a clear, plain-language privacy policy. We tell you exactly what data we collect, why we collect it, and what we do with it. No legalese. No buried opt-outs. We don't sell data. Full stop.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Section 4: Fluid Scientific ── -->
+<section class="section section-light section-pad">
+  <div class="container">
+    <div class="sci-card">
+      <div class="topo-wrap" style="opacity:0.06;">
+        <svg viewBox="0 0 1400 600" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+          <g fill="none" stroke="#37383A" stroke-width="1">
+            <ellipse cx="900" cy="300" rx="600" ry="280" transform="rotate(-6 900 300)"/>
+            <ellipse cx="900" cy="300" rx="500" ry="215" transform="rotate(-6 900 300)"/>
+            <ellipse cx="900" cy="300" rx="400" ry="155" transform="rotate(-6 900 300)"/>
+          </g>
+        </svg>
+      </div>
+      <div class="sci-inner">
+        <div>
+          <div class="sci-logo-wrap">
+            <div class="sci-logo-mark"><svg width="22" height="14" viewBox="0 0 24 16" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><path d="M2 8c0 0 3-6 6-6s5 12 8 12 6-6 6-6"/></svg></div>
+            <div class="sci-logo-name">Fluid Scientific</div>
+          </div>
+          <p class="sci-desc">Fluid Medical is built on Fluid Scientific's sovereign data platform — infrastructure engineered for critical industries where data sovereignty isn't optional, it's the entire point.</p>
+          <p class="sci-desc">From government data systems to industrial safety monitoring, Fluid Scientific's platform is designed for environments where a data breach isn't just embarrassing — it's dangerous.</p>
+          <div class="sci-industries">
+            <span class="sci-industry">Government</span>
+            <span class="sci-industry">Critical Infrastructure</span>
+            <span class="sci-industry">Healthcare</span>
+            <span class="sci-industry">Industrial Safety</span>
+            <span class="sci-industry">Financial Services</span>
+          </div>
+          <a href="https://fluidscientific.com" target="_blank" class="btn" style="display:inline-flex;margin-top:2rem;background:var(--teal);color:white;">Visit Fluid Scientific ↗</a>
+        </div>
+        <div>
+          <div class="sci-stat-grid">
+            <div class="sci-stat">
+              <div class="sci-stat-num">Zero</div>
+              <div class="sci-stat-label">cross-tenant data leaks since inception</div>
+            </div>
+            <div class="sci-stat">
+              <div class="sci-stat-num">End-to-end</div>
+              <div class="sci-stat-label">encryption at rest and in transit</div>
+            </div>
+            <div class="sci-stat">
+              <div class="sci-stat-num">100%</div>
+              <div class="sci-stat-label">explicit consent required for every share</div>
+            </div>
+            <div class="sci-stat">
+              <div class="sci-stat-num">Full</div>
+              <div class="sci-stat-label">audit log for every data access event</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Section 5: For Organisations ── -->
+<section class="section section-dark section-pad">
+  <div class="topo-wrap">
+    <svg viewBox="0 0 1400 600" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+      <g fill="none" stroke="white" stroke-width="1">
+        <ellipse cx="300" cy="300" rx="380" ry="260" transform="rotate(8 300 300)"/>
+        <ellipse cx="300" cy="300" rx="295" ry="195" transform="rotate(8 300 300)"/>
+        <ellipse cx="300" cy="300" rx="215" ry="135" transform="rotate(8 300 300)"/>
+      </g>
+    </svg>
+  </div>
+  <div class="container">
+    <div class="eyebrow eyebrow-sage">For Organisations</div>
+    <h2 style="color:var(--platinum);margin-bottom:0.75rem;">Enterprise-grade. Ethically built.</h2>
+    <p style="color:rgba(236,229,223,0.65);max-width:620px;line-height:1.72;margin-bottom:0;">Wave's organisational tier is built for employers, long-term care operators, and clinical teams who need population health monitoring without compromising individual privacy.</p>
+    <div class="compliance-grid">
+      <div class="compliance-card">
+        <div class="compliance-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2F6E73" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+        </div>
+        <div class="compliance-title">PIPEDA Aligned</div>
+        <p class="compliance-desc">Built to meet Canada's Personal Information Protection and Electronic Documents Act — proper consent, purpose limitation, and individual rights.</p>
+        <span class="compliance-badge">Canada</span>
+      </div>
+      <div class="compliance-card">
+        <div class="compliance-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2F6E73" stroke-width="2" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>
+        </div>
+        <div class="compliance-title">HIPAA Aligned</div>
+        <p class="compliance-desc">Designed for healthcare environments with the US HIPAA framework in mind — protected health information is treated with the safeguards it deserves.</p>
+        <span class="compliance-badge">USA</span>
+      </div>
+      <div class="compliance-card">
+        <div class="compliance-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2F6E73" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <div class="compliance-title">Full Audit Logs</div>
+        <p class="compliance-desc">Every access event, share event, and data modification is logged with timestamp, actor, and reason. Full accountability, always.</p>
+        <span class="compliance-badge">All tiers</span>
+      </div>
+      <div class="compliance-card">
+        <div class="compliance-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2F6E73" stroke-width="2" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+        </div>
+        <div class="compliance-title">No Data Monetisation</div>
+        <p class="compliance-desc">We do not sell, licence, or monetise your users' health data. Not to insurers, not to advertisers, not to pharma. Revenue comes from subscriptions only.</p>
+        <span class="compliance-badge">Always</span>
+      </div>
+      <div class="compliance-card">
+        <div class="compliance-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2F6E73" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+        </div>
+        <div class="compliance-title">Individual Pod Architecture</div>
+        <p class="compliance-desc">Even within an organisational deployment, each individual's data remains in their own isolated pod. Aggregate reporting is anonymised and opt-in.</p>
+        <span class="compliance-badge">Structural</span>
+      </div>
+      <div class="compliance-card">
+        <div class="compliance-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2F6E73" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+        </div>
+        <div class="compliance-title">End-to-End Encryption</div>
+        <p class="compliance-desc">Data is encrypted at rest (AES-256) and in transit (TLS 1.3). Encryption keys are managed per-pod. Fluid Medical cannot access your users' raw health data.</p>
+        <span class="compliance-badge">Infrastructure</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA ── -->
+<section class="cta-strip section">
+  <div class="container" style="text-align:center;">
+    <h2>Ready to put privacy first?</h2>
+    <p>Whether you're an individual who wants control of their health data, or an organisation that wants to do right by your people — Wave is built for you.</p>
+    <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+      <a href="fluidmedical-contact.html" class="btn btn-white">Get Wave Mini — Free →</a>
+      <a href="fluidmedical-contact.html" class="btn btn-outline-light">Talk to Our Team</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── Footer ── -->
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <div>
+        <div class="footer-logo">Fluid Medical</div>
+        <p class="footer-tagline">Primary Health Care Within Reach. Built on Fluid Scientific's sovereign data infrastructure. Vancouver, Canada.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Platform</h5>
+        <a href="fluidmedical-platform.html">Fluid Precision</a>
+        <a href="fluidmedical-platform.html">DailySignal</a>
+        <a href="fluidmedical-platform.html">Fluid+Me</a>
+        <a href="fluidmedical-platform.html">My Records</a>
+        <a href="fluidmedical-demo.html">Live Demo</a>
+      </div>
+      <div class="footer-col">
+        <h5>Company</h5>
+        <a href="fluidmedical-about.html">About Us</a>
+        <a href="fluidmedical-security.html">Security &amp; Data</a>
+        <a href="fluidmedical-contact.html">Contact</a>
+        <a href="https://fluidscientific.com" target="_blank">Fluid Scientific ↗</a>
+      </div>
+      <div class="footer-col">
+        <h5>Get Wave</h5>
+        <a href="fluidmedical-contact.html">Individuals</a>
+        <a href="fluidmedical-contact.html">Organisations</a>
+        <a href="fluidmedical-contact.html">Investors &amp; Media</a>
+        <a href="mailto:info@fluidmedical.com">info@fluidmedical.com</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2026 Fluid Medical Inc. Vancouver, BC, Canada.</div>
+      <div class="footer-legal"><a href="#">Privacy Policy</a><a href="#">Terms of Service</a><a href="#">Accessibility</a></div>
+    </div>
+  </div>
+</footer>
+
+<script>
+function toggleMenu() { document.getElementById('mobileMenu').classList.toggle('open'); }
+document.querySelectorAll('.mobile-menu a').forEach(l => l.addEventListener('click', () => { document.getElementById('mobileMenu').classList.remove('open'); }));
+window.addEventListener('scroll', () => { document.getElementById('mainNav').style.boxShadow = window.scrollY > 10 ? '0 4px 20px rgba(0,0,0,0.35)' : 'none'; });
+</script>
+</body>
+</html>
