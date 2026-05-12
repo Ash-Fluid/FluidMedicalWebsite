@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact — Fluid Medical</title>
+<link rel="stylesheet" href="colors_and_type.css">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--fm-font-sans);background:var(--fm-bg);color:var(--fm-fg);line-height:var(--fm-leading-relaxed);-webkit-font-smoothing:antialiased}
+img{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+ul{list-style:none}
+.container{max-width:var(--fm-container);margin:0 auto;padding:0 clamp(1.5rem,5vw,4rem);position:relative;z-index:1}
+.section-pad{padding:clamp(5rem,10vw,9rem) 0}
+.topo{position:absolute;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.topo svg{width:100%;height:100%}
+.topo--ink{opacity:.08;color:var(--fm-cream-100)}
+.topo--cream{opacity:.05;color:var(--fm-ink-800)}
+
+/* NAV */
+#nav{position:fixed;top:0;left:0;right:0;z-index:300;height:90px;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(1.5rem,5vw,4rem);background:rgba(14,13,11,.96);backdrop-filter:blur(16px);border-bottom:1px solid rgba(251,247,238,.06);transition:box-shadow .22s}
+#nav.scrolled{box-shadow:0 4px 32px rgba(14,13,11,.55)}
+.nav-logo{display:flex;align-items:center;gap:11px}
+.nav-mark{width:68px;height:68px;flex-shrink:0}
+.nav-wordmark{height:68px;width:auto}
+.nav-links{display:flex;align-items:center;gap:1.75rem}
+.nav-links a{color:rgba(251,247,238,.5);font-size:.9375rem;font-weight:500;transition:color .15s}
+.nav-links a:hover,.nav-links a.active{color:var(--fm-cream-100)}
+.btn-nav{background:var(--fm-brand);color:var(--fm-ink-900);padding:.5rem 1.3rem;border-radius:var(--fm-r-sm);font-size:.9rem;font-weight:700;transition:background .15s,transform .15s}
+.btn-nav:hover{background:var(--fm-brand-hover);transform:translateY(-1px);color:var(--fm-ink-900)}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:4px}
+.hamburger span{display:block;width:22px;height:2px;background:var(--fm-cream-100);border-radius:2px}
+.mob{display:none;position:fixed;top:90px;left:0;right:0;z-index:299;background:var(--fm-ink-900);padding:1.5rem 2rem 2rem;border-bottom:1px solid rgba(251,247,238,.08);flex-direction:column}
+.mob.open{display:flex}
+.mob a{color:var(--fm-cream-100);font-size:1rem;font-weight:500;padding:.7rem 0;border-bottom:1px solid rgba(251,247,238,.07)}
+.mob .btn-nav{margin-top:.75rem;text-align:center;display:block;border:none}
+
+/* PAGE HERO */
+.page-hero{padding-top:calc(90px + 5rem);padding-bottom:5rem;background:var(--fm-ink-900);color:var(--fm-cream-100);position:relative;overflow:hidden}
+.page-hero-eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:.75rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--fm-brand);margin-bottom:1.4rem}
+.page-hero-eyebrow-line{width:22px;height:1px;background:var(--fm-brand)}
+.page-hero h1{font-family:var(--fm-font-display);font-size:clamp(2.6rem,6vw,4.5rem);line-height:1.08;letter-spacing:-.025em;color:var(--fm-cream-100)}
+.page-hero h1 em{font-style:italic;color:var(--fm-brand)}
+.page-hero-lead{font-size:clamp(1rem,1.6vw,1.125rem);color:rgba(251,247,238,.55);max-width:580px;margin-top:1.5rem;line-height:1.72}
+
+/* CONTACT TABS */
+.contact-tabs{display:flex;gap:.5rem;margin-bottom:2.5rem}
+.ctab{padding:.6rem 1.25rem;border-radius:var(--fm-r-sm);font-size:.9rem;font-weight:600;cursor:pointer;transition:background .15s,color .15s;border:1.5px solid var(--fm-border);background:transparent;color:var(--fm-fg-muted)}
+.ctab.active,.ctab:hover{background:var(--fm-brand);color:var(--fm-ink-900);border-color:var(--fm-brand)}
+.ctab-panel{display:none}
+.ctab-panel.active{display:block}
+
+/* FORM GRID */
+.contact-grid{display:grid;grid-template-columns:2fr 1fr;gap:4.5rem;align-items:start}
+.form-card{background:var(--fm-paper);border-radius:var(--fm-r-2xl);padding:clamp(2rem,4vw,3rem);border:1px solid var(--fm-border);box-shadow:var(--fm-shadow-3)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.form-group{display:flex;flex-direction:column;gap:.45rem;margin-bottom:1.1rem}
+.form-label{font-size:.875rem;font-weight:600;color:var(--fm-fg-strong)}
+.form-input{width:100%;padding:.75rem 1rem;border-radius:var(--fm-r-md);border:1.5px solid var(--fm-border);background:var(--fm-bg);color:var(--fm-fg);font-family:var(--fm-font-sans);font-size:.9375rem;transition:border-color .15s,box-shadow .15s;outline:none}
+.form-input:focus{border-color:var(--fm-brand);box-shadow:0 0 0 3px rgba(181,138,46,.12)}
+.form-input::placeholder{color:var(--fm-fg-faint)}
+select.form-input{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23A19A8E' stroke-width='2' stroke-linecap='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 1rem center;padding-right:2.5rem}
+textarea.form-input{resize:vertical;min-height:120px}
+.form-submit{width:100%;padding:1rem;background:var(--fm-brand);color:var(--fm-ink-900);border:none;border-radius:var(--fm-r-md);font-family:var(--fm-font-sans);font-size:1rem;font-weight:700;cursor:pointer;transition:background .15s,transform .15s;margin-top:.5rem}
+.form-submit:hover{background:var(--fm-brand-hover);transform:translateY(-1px)}
+.form-note{font-size:.78rem;color:var(--fm-fg-muted);text-align:center;margin-top:.75rem;line-height:1.5}
+
+/* SIDE INFO */
+.contact-info h3{font-family:var(--fm-font-display);font-size:1.4rem;letter-spacing:-.01em;margin-bottom:1rem}
+.contact-info p{font-size:.9rem;color:var(--fm-fg-muted);line-height:1.65;margin-bottom:1.5rem}
+.info-item{display:flex;align-items:flex-start;gap:.75rem;margin-bottom:1.25rem}
+.info-icon{width:36px;height:36px;border-radius:var(--fm-r-sm);background:var(--fm-brand-tint);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:.1rem}
+.info-label{font-size:.75rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--fm-fg-muted);margin-bottom:.2rem}
+.info-value{font-size:.9375rem;font-weight:500;color:var(--fm-fg-strong)}
+.info-value a{color:var(--fm-brand);transition:color .15s}
+.info-value a:hover{color:var(--fm-brand-hover)}
+
+/* CTA CARDS */
+.cta-cards{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-top:4rem}
+.cta-card{border-radius:var(--fm-r-2xl);padding:2.5rem;position:relative;overflow:hidden}
+.cta-card-ind{background:var(--fm-brand);color:var(--fm-ink-900)}
+.cta-card-org{background:var(--fm-ink-900);color:var(--fm-cream-100)}
+.cta-card .topo{z-index:0}
+.cta-card>*:not(.topo){position:relative;z-index:1}
+.cta-eyebrow{font-size:.72rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase;margin-bottom:1rem;opacity:.6}
+.cta-card h3{font-family:var(--fm-font-display);font-size:clamp(1.5rem,2.5vw,2rem);line-height:1.15;margin-bottom:.75rem}
+.cta-card p{font-size:.9rem;line-height:1.65;opacity:.7;margin-bottom:1.75rem}
+.cta-card .btn-cta{display:inline-flex;align-items:center;gap:8px;padding:.8rem 1.5rem;border-radius:var(--fm-r-md);font-family:var(--fm-font-sans);font-size:.9rem;font-weight:700;text-decoration:none;transition:transform .15s}
+.cta-card .btn-cta:hover{transform:translateY(-2px)}
+.cta-card-ind .btn-cta{background:var(--fm-ink-900);color:var(--fm-cream-100)}
+.cta-card-org .btn-cta{background:var(--fm-brand);color:var(--fm-ink-900)}
+
+/* PRIVACY STRIP */
+.privacy-strip{background:var(--fm-cream-200);border-top:1px solid var(--fm-border)}
+.privacy-inner{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:2rem 3.5rem;padding:1.5rem 0}
+.privacy-item{display:flex;align-items:center;gap:.5rem;font-size:.85rem;font-weight:500;color:var(--fm-fg-muted)}
+.privacy-icon{color:var(--fm-brand);flex-shrink:0}
+.privacy-link{color:var(--fm-brand);font-weight:600;font-size:.85rem}
+
+/* FOOTER */
+footer{background:var(--fm-ink-900);padding:clamp(3rem,6vw,5rem) 0 2.5rem}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;margin-bottom:3rem}
+.footer-mark{width:40px;height:40px;margin-bottom:1rem}
+.footer-tagline{color:rgba(251,247,238,.32);font-size:.875rem;line-height:1.65;max-width:260px;margin-top:.5rem}
+.footer-col h5{color:rgba(251,247,238,.38);font-size:.72rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase;margin-bottom:1rem}
+.footer-col a{display:block;color:rgba(251,247,238,.55);font-size:.9rem;margin-bottom:.6rem;transition:color .15s}
+.footer-col a:hover{color:var(--fm-cream-100)}
+.footer-bottom{border-top:1px solid rgba(251,247,238,.07);padding-top:1.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+.footer-copy{color:rgba(251,247,238,.28);font-size:.8rem}
+.footer-legal{display:flex;gap:1.5rem}
+.footer-legal a{color:rgba(251,247,238,.28);font-size:.8rem;transition:color .15s}
+.footer-legal a:hover{color:rgba(251,247,238,.55)}
+
+@media(max-width:860px){.contact-grid{grid-template-columns:1fr}.cta-cards{grid-template-columns:1fr}}
+@media(max-width:640px){.nav-links{display:none}.hamburger{display:flex}.form-row{grid-template-columns:1fr}.footer-grid{grid-template-columns:1fr 1fr;gap:2rem}.privacy-inner{flex-direction:column;align-items:flex-start;padding:0 2rem;gap:.85rem}}
+@media(max-width:500px){.footer-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="fluidmedical-home.html" class="nav-logo" aria-label="Fluid Medical">
+    <div class="nav-mark">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><defs><linearGradient id="nm" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#D4A943"/><stop offset="55%" stop-color="#B58A2E"/><stop offset="100%" stop-color="#8A6822"/></linearGradient></defs><circle cx="32" cy="32" r="32" fill="#131211"/><circle cx="32" cy="32" r="29.5" fill="none" stroke="url(#nm)" stroke-width="1.6"/><path d="M11 34 C 17 22, 23 46, 32 32 S 46 16, 53 28" fill="none" stroke="url(#nm)" stroke-width="3.2" stroke-linecap="round"/></svg>
+    </div>
+    <img src="assets/wordmarks/fluid-medical-wordmark-brass.png" alt="Fluid Medical" class="nav-wordmark">
+  </a>
+  <div class="nav-links">
+    <a href="fluidmedical-home.html">Home</a>
+    <a href="fluidmedical-platform.html">Platform</a>
+    <a href="fluidmedical-about.html">About</a>
+    <a href="fluidmedical-security.html">Security &amp; Data</a>
+    <a href="fluidmedical-contact.html" class="active">Contact</a>
+    <a href="fluidmedical-contact.html" class="btn-nav">Get Oria</a>
+  </div>
+  <button class="hamburger" onclick="toggleMenu()" aria-label="Menu"><span></span><span></span><span></span></button>
+</nav>
+<div class="mob" id="mob">
+  <a href="fluidmedical-home.html">Home</a>
+  <a href="fluidmedical-platform.html">Platform</a>
+  <a href="fluidmedical-about.html">About</a>
+  <a href="fluidmedical-security.html">Security &amp; Data</a>
+  <a href="fluidmedical-contact.html">Contact</a>
+  <a href="fluidmedical-contact.html" class="btn-nav">Get Oria</a>
+</div>
+
+<!-- PAGE HERO -->
+<section class="page-hero">
+  <div class="topo topo--ink">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 600" preserveAspectRatio="xMidYMid slice"><g fill="none" stroke="currentColor" stroke-width="1"><ellipse cx="1050" cy="280" rx="560" ry="360" transform="rotate(-6 1050 280)"/><ellipse cx="1050" cy="280" rx="460" ry="280" transform="rotate(-6 1050 280)"/><ellipse cx="1050" cy="280" rx="368" ry="208" transform="rotate(-6 1050 280)"/><ellipse cx="1050" cy="280" rx="282" ry="143" transform="rotate(-6 1050 280)"/><ellipse cx="120" cy="490" rx="240" ry="158" transform="rotate(12 120 490)"/><ellipse cx="120" cy="490" rx="170" ry="110" transform="rotate(12 120 490)"/></g></svg>
+  </div>
+  <div class="container">
+    <div style="max-width:680px">
+      <div class="page-hero-eyebrow"><span class="page-hero-eyebrow-line"></span>Get in Touch</div>
+      <h1>Let's talk about <em>your health.</em></h1>
+      <p class="page-hero-lead">Whether you are an individual looking for access to Oria, an organisation interested in our enterprise platform, or a journalist or investor — we would love to hear from you.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT FORMS -->
+<section class="section-pad" style="position:relative;overflow:hidden">
+  <div class="topo topo--cream">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 900" preserveAspectRatio="xMidYMid slice"><g fill="none" stroke="currentColor" stroke-width="1"><ellipse cx="280" cy="400" rx="440" ry="295" transform="rotate(7 280 400)"/><ellipse cx="280" cy="400" rx="355" ry="228" transform="rotate(7 280 400)"/><ellipse cx="280" cy="400" rx="275" ry="168" transform="rotate(7 280 400)"/></g></svg>
+  </div>
+  <div class="container">
+    <div class="contact-tabs" id="tabs">
+      <button class="ctab active" onclick="switchTab('individuals')">Individuals</button>
+      <button class="ctab" onclick="switchTab('organisations')">Organisations</button>
+      <button class="ctab" onclick="switchTab('media')">Investors &amp; Media</button>
+    </div>
+
+    <!-- INDIVIDUALS -->
+    <div class="ctab-panel active" id="individuals">
+      <div class="contact-grid">
+        <div class="form-card">
+          <div class="fm-eyebrow no-rule" style="margin-bottom:1rem">Get Early Access</div>
+          <h2 class="fm-h3" style="margin-bottom:.35rem">Get Oria free.</h2>
+          <p style="font-size:.9rem;color:var(--fm-fg-muted);margin-bottom:2rem">Oria ships Q3 2026. Join the early access list and we will reach out when your region is ready.</p>
+          <form onsubmit="handleSubmit(event,'ind-confirm')">
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">First name</label>
+                <input type="text" class="form-input" placeholder="Ada" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Last name</label>
+                <input type="text" class="form-input" placeholder="Lovelace" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email address</label>
+              <input type="email" class="form-input" placeholder="you@example.com" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Country</label>
+              <select class="form-input">
+                <option value="">Select your country</option>
+                <option>Canada</option>
+                <option>United States</option>
+                <option>United Kingdom</option>
+                <option>Australia</option>
+                <option>New Zealand</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">What matters most to you in a health app? (optional)</label>
+              <textarea class="form-input" placeholder="Hormone tracking, nutrition, fitness recovery..."></textarea>
+            </div>
+            <button type="submit" class="form-submit">Join Early Access</button>
+            <p class="form-note" id="ind-confirm" style="display:none;color:var(--fm-success);font-weight:600">You are on the list. We will be in touch before launch.</p>
+            <p class="form-note">No credit card required. We will not share your email with third parties.</p>
+          </form>
+        </div>
+
+        <div class="contact-info">
+          <h3>What to expect</h3>
+          <p>Oria is currently in pre-launch. Early access members receive first access by region, a reduced launch price, and direct input into feature prioritisation.</p>
+          <div class="info-item">
+            <div class="info-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--fm-brand)" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+            <div><div class="info-label">Timeline</div><div class="info-value">Ships Q3 2026 — Canada and UK first</div></div>
+          </div>
+          <div class="info-item">
+            <div class="info-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--fm-brand)" stroke-width="2" stroke-linecap="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div>
+            <div><div class="info-label">Free tier</div><div class="info-value">Core Foundational tier — always free</div></div>
+          </div>
+          <div class="info-item">
+            <div class="info-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--fm-brand)" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div>
+            <div><div class="info-label">Privacy</div><div class="info-value">Your data stays yours — always</div></div>
+          </div>
+          <div class="info-item">
+            <div class="info-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--fm-brand)" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
+            <div><div class="info-label">Questions</div><div class="info-value"><a href="mailto:ash@fluidscientific.com">ash@fluidscientific.com</a></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ORGANISATIONS -->
+    <div class="ctab-panel" id="organisations">
+      <div class="contact-grid">
+        <div class="form-card">
+          <div class="fm-eyebrow no-rule" style="margin-bottom:1rem">Enterprise Enquiry</div>
+          <h2 class="fm-h3" style="margin-bottom:.35rem">Talk to our team.</h2>
+          <p style="font-size:.9rem;color:var(--fm-fg-muted);margin-bottom:2rem">We work with long-term care homes, employers, and clinical teams. Tell us about your programme and we will come back within one business day.</p>
+          <form onsubmit="handleSubmit(event,'org-confirm')">
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Name</label>
+                <input type="text" class="form-input" placeholder="Your name" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Organisation</label>
+                <input type="text" class="form-input" placeholder="Organisation name" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Work email</label>
+              <input type="email" class="form-input" placeholder="you@organisation.com" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Organisation type</label>
+              <select class="form-input">
+                <option value="">Select type</option>
+                <option>Long-term care / aged care</option>
+                <option>Employer wellness programme</option>
+                <option>Clinical research / trials</option>
+                <option>Primary care / GP practice</option>
+                <option>Hospital / health system</option>
+                <option>Occupational health</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Approximate programme size</label>
+              <select class="form-input">
+                <option value="">Select range</option>
+                <option>1–50 individuals</option>
+                <option>50–250 individuals</option>
+                <option>250–1,000 individuals</option>
+                <option>1,000+ individuals</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Tell us about your programme</label>
+              <textarea class="form-input" placeholder="What are you trying to accomplish? Any specific requirements around data sovereignty, integration, or compliance?"></textarea>
+            </div>
+            <button type="submit" class="form-submit">Send Enquiry</button>
+            <p class="form-note" id="org-confirm" style="display:none;color:var(--fm-success);font-weight:600">Received. We will be in touch within one business day.</p>
+            <p class="form-note">We respond within one business day. No sales scripts — just a conversation.</p>
+          </form>
+        </div>
+
+        <div class="contact-info">
+          <h3>What we offer organisations</h3>
+          <p>Our enterprise platform is purpose-built for population health monitoring without compromising individual data sovereignty.</p>
+          <div class="info-item">
+            <div class="info-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--fm-brand)" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div>
+            <div><div class="info-label">Deployment</div><div class="info-value">White-label or Fluid Medical branded</div></div>
+          </div>
+          <div class="info-item">
+            <div class="info-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--fm-brand)" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+            <div><div class="info-label">Compliance</div><div class="info-value">PIPEDA, HIPAA-aligned, BAAs available</div></div>
+          </div>
+          <div class="info-item">
+            <div class="info-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--fm-brand)" stroke-width="2" stroke-linecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+            <div><div class="info-label">Analytics</div><div class="info-value">Population-level aggregate dashboards only — individual sovereignty preserved</div></div>
+          </div>
+          <div class="info-item">
+            <div class="info-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--fm-brand)" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
+            <div><div class="info-label">Direct contact</div><div class="info-value"><a href="mailto:ash@fluidscientific.com">ash@fluidscientific.com</a></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- INVESTORS & MEDIA -->
+    <div class="ctab-panel" id="media">
+      <div class="contact-grid">
+        <div class="form-card">
+          <div class="fm-eyebrow no-rule" style="margin-bottom:1rem">Media &amp; Investment</div>
+          <h2 class="fm-h3" style="margin-bottom:.35rem">Speak with the founders.</h2>
+          <p style="font-size:.9rem;color:var(--fm-fg-muted);margin-bottom:2rem">For press enquiries, investor conversations, or partnership discussions — reach out directly. We respond to every genuine enquiry.</p>
+          <form onsubmit="handleSubmit(event,'med-confirm')">
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Name</label>
+                <input type="text" class="form-input" placeholder="Your name" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Organisation</label>
+                <input type="text" class="form-input" placeholder="Publication or firm name">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email</label>
+              <input type="email" class="form-input" placeholder="you@example.com" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Enquiry type</label>
+              <select class="form-input">
+                <option value="">Select type</option>
+                <option>Press / media</option>
+                <option>Investment enquiry</option>
+                <option>Partnership / licensing</option>
+                <option>Speaking / events</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Tell us more</label>
+              <textarea class="form-input" placeholder="What would you like to discuss?"></textarea>
+            </div>
+            <button type="submit" class="form-submit">Send Message</button>
+            <p class="form-note" id="med-confirm" style="display:none;color:var(--fm-success);font-weight:600">Message received. We will be in touch shortly.</p>
+          </form>
+        </div>
+
+        <div class="contact-info">
+          <h3>For press and investors</h3>
+          <p>Fluid Medical is a pre-Series A company headquartered in Vancouver, BC. We are building the infrastructure layer for personal health data sovereignty.</p>
+          <div class="info-item">
+            <div class="info-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--fm-brand)" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
+            <div><div class="info-label">Press contact</div><div class="info-value"><a href="mailto:ash@fluidscientific.com">ash@fluidscientific.com</a></div></div>
+          </div>
+          <div class="info-item">
+            <div class="info-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--fm-brand)" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+            <div><div class="info-label">Headquarters</div><div class="info-value">Vancouver, BC, Canada</div></div>
+          </div>
+          <div class="info-item">
+            <div class="info-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--fm-brand)" stroke-width="2" stroke-linecap="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/></svg></div>
+            <div><div class="info-label">Open source</div><div class="info-value"><a href="https://github.com/Ash-Fluid/Wave2.0" target="_blank" rel="noopener" style="color:var(--fm-brand)">Oria prototype on GitHub</a></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BOTTOM CTA CARDS -->
+    <div class="cta-cards" style="margin-top:5rem">
+      <div class="cta-card cta-card-ind">
+        <div class="topo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400"><g fill="none" stroke="#131211" stroke-width="1" opacity=".12"><ellipse cx="500" cy="200" rx="320" ry="250"/><ellipse cx="500" cy="200" rx="240" ry="188"/><ellipse cx="500" cy="200" rx="165" ry="130"/></g></svg></div>
+        <div class="cta-eyebrow">For Individuals</div>
+        <h3>Know your body.<br>Actually.</h3>
+        <p>At-home urinalysis, wearable data, and AI that finally makes sense of it all. Free to join. Ships Q3 2026.</p>
+        <a href="#" onclick="switchTab('individuals');window.scrollTo({top:document.getElementById('tabs').getBoundingClientRect().top+scrollY-90,behavior:'smooth'});return false" class="btn-cta">Get Early Access</a>
+      </div>
+      <div class="cta-card cta-card-org">
+        <div class="topo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400"><g fill="none" stroke="white" stroke-width="1" opacity=".07"><ellipse cx="100" cy="200" rx="320" ry="250"/><ellipse cx="100" cy="200" rx="240" ry="188"/><ellipse cx="100" cy="200" rx="165" ry="130"/></g></svg></div>
+        <div class="cta-eyebrow">For Organisations</div>
+        <h3>Health at scale, without compromise.</h3>
+        <p>PIPEDA-aligned, HIPAA-ready, and built to preserve individual data sovereignty even in enterprise deployments.</p>
+        <a href="#" onclick="switchTab('organisations');window.scrollTo({top:document.getElementById('tabs').getBoundingClientRect().top+scrollY-90,behavior:'smooth'});return false" class="btn-cta">Talk to Our Team</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRIVACY STRIP -->
+<div class="privacy-strip">
+  <div class="container">
+    <div class="privacy-inner">
+      <div class="privacy-item"><svg class="privacy-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg><span>End-to-end encrypted</span></div>
+      <div class="privacy-item"><svg class="privacy-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span>Permission-based sharing only</span></div>
+      <div class="privacy-item"><svg class="privacy-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>Never sold to advertisers or insurers</span></div>
+      <div class="privacy-item"><a href="fluidmedical-security.html" class="privacy-link">Data sovereignty policy →</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-mark"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><defs><linearGradient id="ff" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#D4A943"/><stop offset="55%" stop-color="#B58A2E"/><stop offset="100%" stop-color="#8A6822"/></linearGradient></defs><circle cx="32" cy="32" r="32" fill="#131211"/><circle cx="32" cy="32" r="29.5" fill="none" stroke="url(#ff)" stroke-width="1.6"/><path d="M11 34 C 17 22, 23 46, 32 32 S 46 16, 53 28" fill="none" stroke="url(#ff)" stroke-width="3.2" stroke-linecap="round"/></svg></div>
+        <p class="footer-tagline">Primary Health Care Within Reach. Built on Fluid Scientific's sovereign data infrastructure. Vancouver, BC, Canada.</p>
+      </div>
+      <div class="footer-col"><h5>Platform</h5><a href="fluidmedical-platform.html">Fluid Precision</a><a href="fluidmedical-platform.html">DailySignal</a><a href="fluidmedical-platform.html">Fluid+Me</a><a href="fluidmedical-platform.html">My Records</a><a href="fluidmedical-demo.html">Live Demo</a></div>
+      <div class="footer-col"><h5>Company</h5><a href="fluidmedical-about.html">About Us</a><a href="fluidmedical-security.html">Security &amp; Data</a><a href="fluidmedical-contact.html">Contact</a><a href="https://fluidscientific.com" target="_blank" rel="noopener">Fluid Scientific</a></div>
+      <div class="footer-col"><h5>Get Oria</h5><a href="fluidmedical-contact.html">Individuals</a><a href="fluidmedical-contact.html">Organisations</a><a href="fluidmedical-contact.html">Investors &amp; Media</a><a href="mailto:ash@fluidscientific.com">ash@fluidscientific.com</a></div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">&copy; 2026 Fluid Medical Inc. Vancouver, BC, Canada.</div>
+      <div class="footer-legal"><a href="#">Privacy Policy</a><a href="#">Terms of Service</a><a href="#">Accessibility</a></div>
+    </div>
+  </div>
+</footer>
+
+<script>
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>10),{passive:true});
+function toggleMenu(){document.getElementById('mob').classList.toggle('open')}
+document.querySelectorAll('.mob a').forEach(l=>l.addEventListener('click',()=>document.getElementById('mob').classList.remove('open')));
+function switchTab(id){
+  document.querySelectorAll('.ctab').forEach((b,i)=>{b.classList.toggle('active',['individuals','organisations','media'][i]===id)});
+  document.querySelectorAll('.ctab-panel').forEach(p=>p.classList.toggle('active',p.id===id));
+}
+function handleSubmit(e,confirmId){
+  e.preventDefault();
+  const conf=document.getElementById(confirmId);
+  if(conf){conf.style.display='block'}
+  e.target.querySelectorAll('input,select,textarea,button[type=submit]').forEach(el=>el.disabled=true);
+}
+// Pre-select tab from URL hash
+if(location.hash){const t=location.hash.slice(1);if(['individuals','organisations','media'].includes(t))switchTab(t)}
+</script>
+</body>
+</html>
