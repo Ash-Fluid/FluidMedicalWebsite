@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 900" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Topographic background motif">
+  <g fill="none" stroke="currentColor" stroke-width="1">
+    <ellipse cx="900" cy="420" rx="620" ry="380" transform="rotate(-12 900 420)"></ellipse>
+    <ellipse cx="900" cy="420" rx="540" ry="315" transform="rotate(-12 900 420)"></ellipse>
+    <ellipse cx="900" cy="420" rx="460" ry="250" transform="rotate(-12 900 420)"></ellipse>
+    <ellipse cx="900" cy="420" rx="380" ry="185" transform="rotate(-12 900 420)"></ellipse>
+    <ellipse cx="900" cy="420" rx="300" ry="125" transform="rotate(-12 900 420)"></ellipse>
+    <ellipse cx="900" cy="420" rx="220" ry="72" transform="rotate(-12 900 420)"></ellipse>
+    <ellipse cx="180" cy="720" rx="260" ry="170" transform="rotate(15 180 720)"></ellipse>
+    <ellipse cx="180" cy="720" rx="190" ry="118" transform="rotate(15 180 720)"></ellipse>
+    <ellipse cx="180" cy="720" rx="125" ry="72" transform="rotate(15 180 720)"></ellipse>
+  </g>
+</svg>
