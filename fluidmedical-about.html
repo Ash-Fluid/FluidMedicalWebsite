@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About — Fluid Medical</title>
+<link rel="stylesheet" href="colors_and_type.css">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--fm-font-sans);background:var(--fm-bg);color:var(--fm-fg);line-height:var(--fm-leading-relaxed);-webkit-font-smoothing:antialiased}
+img{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+ul{list-style:none}
+.container{max-width:var(--fm-container);margin:0 auto;padding:0 clamp(1.5rem,5vw,4rem);position:relative;z-index:1}
+.section-pad{padding:clamp(5rem,10vw,9rem) 0}
+.topo{position:absolute;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.topo svg{width:100%;height:100%}
+.topo--ink{opacity:.08;color:var(--fm-cream-100)}
+.topo--cream{opacity:.05;color:var(--fm-ink-800)}
+
+/* NAV */
+#nav{position:fixed;top:0;left:0;right:0;z-index:300;height:90px;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(1.5rem,5vw,4rem);background:rgba(14,13,11,.96);backdrop-filter:blur(16px);border-bottom:1px solid rgba(251,247,238,.06);transition:box-shadow .22s}
+#nav.scrolled{box-shadow:0 4px 32px rgba(14,13,11,.55)}
+.nav-logo{display:flex;align-items:center;gap:11px}
+.nav-mark{width:68px;height:68px;flex-shrink:0}
+.nav-wordmark{height:68px;width:auto}
+.nav-links{display:flex;align-items:center;gap:1.75rem}
+.nav-links a{color:rgba(251,247,238,.5);font-size:.9375rem;font-weight:500;transition:color .15s}
+.nav-links a:hover,.nav-links a.active{color:var(--fm-cream-100)}
+.btn-nav{background:var(--fm-brand);color:var(--fm-ink-900);padding:.5rem 1.3rem;border-radius:var(--fm-r-sm);font-size:.9rem;font-weight:700;transition:background .15s,transform .15s}
+.btn-nav:hover{background:var(--fm-brand-hover);transform:translateY(-1px);color:var(--fm-ink-900)}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:4px}
+.hamburger span{display:block;width:22px;height:2px;background:var(--fm-cream-100);border-radius:2px}
+.mob{display:none;position:fixed;top:90px;left:0;right:0;z-index:299;background:var(--fm-ink-900);padding:1.5rem 2rem 2rem;border-bottom:1px solid rgba(251,247,238,.08);flex-direction:column}
+.mob.open{display:flex}
+.mob a{color:var(--fm-cream-100);font-size:1rem;font-weight:500;padding:.7rem 0;border-bottom:1px solid rgba(251,247,238,.07)}
+.mob .btn-nav{margin-top:.75rem;text-align:center;display:block;border:none}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:8px;padding:.875rem 1.75rem;border-radius:var(--fm-r-md);font-family:var(--fm-font-sans);font-size:1rem;font-weight:600;cursor:pointer;border:none;transition:background .15s,transform .15s,box-shadow .2s;text-decoration:none}
+.btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(20,18,14,.22)}
+.btn-brass{background:var(--fm-brand);color:var(--fm-ink-900)}
+.btn-brass:hover{background:var(--fm-brand-hover)}
+.btn-outline{background:transparent;color:var(--fm-brand);border:1.5px solid rgba(181,138,46,.35)}
+.btn-outline:hover{border-color:var(--fm-brand);background:rgba(181,138,46,.05);box-shadow:none}
+
+/* PAGE HERO */
+.page-hero{padding-top:calc(90px + 5rem);padding-bottom:5rem;background:var(--fm-ink-900);color:var(--fm-cream-100);position:relative;overflow:hidden}
+.page-hero-inner{max-width:760px}
+.page-hero-eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:.75rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--fm-brand);margin-bottom:1.4rem}
+.page-hero-eyebrow-line{width:22px;height:1px;background:var(--fm-brand)}
+.page-hero h1{font-family:var(--fm-font-display);font-size:clamp(2.6rem,6vw,4.5rem);line-height:1.08;letter-spacing:-.025em;color:var(--fm-cream-100)}
+.page-hero h1 em{font-style:italic;color:var(--fm-brand)}
+.page-hero-lead{font-size:clamp(1rem,1.6vw,1.125rem);color:rgba(251,247,238,.55);max-width:580px;margin-top:1.5rem;line-height:1.72}
+
+/* STORY SECTIONS */
+.story-grid{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:start}
+.story-prose{font-size:1.0625rem;line-height:1.78;color:var(--fm-fg)}
+.story-prose p+p{margin-top:1.1em}
+.story-prose strong{color:var(--fm-fg-strong);font-weight:600}
+.pull-quote{font-family:var(--fm-font-display);font-style:italic;font-size:clamp(1.5rem,2.5vw,2.1rem);line-height:1.32;letter-spacing:-.015em;color:var(--fm-ink-800);border-left:3px solid var(--fm-brand);padding-left:1.5rem;margin:2.5rem 0}
+
+/* ENTITY CARDS */
+.entity-cards{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:3.5rem}
+.entity-card{border-radius:var(--fm-r-xl);padding:2.5rem;background:var(--fm-paper);border:1px solid var(--fm-border);box-shadow:var(--fm-shadow-2);position:relative;overflow:hidden}
+.entity-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.ec-fluid-medical::before{background:var(--fm-brand)}
+.ec-fluid-sci::before{background:#4A9EBF}
+.entity-logo{height:32px;margin-bottom:1.5rem}
+.entity-card h3{font-family:var(--fm-font-display);font-size:1.5rem;letter-spacing:-.015em;margin-bottom:.75rem}
+.entity-card p{font-size:.9375rem;color:var(--fm-fg-muted);line-height:1.68}
+.entity-loc{display:inline-flex;align-items:center;gap:6px;font-size:.8rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--fm-fg-faint);margin-top:1.25rem}
+
+/* TIMELINE */
+.timeline{position:relative;margin-top:3.5rem}
+.timeline::before{content:'';position:absolute;left:0;top:8px;bottom:8px;width:2px;background:linear-gradient(180deg,var(--fm-brand) 0%,rgba(181,138,46,.15) 100%)}
+.tl-item{padding-left:2.5rem;position:relative;margin-bottom:2.75rem}
+.tl-dot{position:absolute;left:-5px;top:8px;width:12px;height:12px;border-radius:50%;background:var(--fm-brand);box-shadow:0 0 0 3px rgba(181,138,46,.18)}
+.tl-year{font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--fm-brand);margin-bottom:.35rem}
+.tl-title{font-family:var(--fm-font-display);font-size:1.2rem;letter-spacing:-.01em;margin-bottom:.4rem}
+.tl-desc{font-size:.9375rem;color:var(--fm-fg-muted);line-height:1.65}
+
+/* VALUES */
+.values-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;margin-top:3rem}
+.value-card{padding:2rem;border-radius:var(--fm-r-xl);background:var(--fm-paper);border:1px solid var(--fm-border);box-shadow:var(--fm-shadow-1)}
+.value-icon{width:44px;height:44px;border-radius:var(--fm-r-md);background:var(--fm-brand-tint);display:flex;align-items:center;justify-content:center;margin-bottom:1.1rem}
+.value-card h4{font-family:var(--fm-font-display);font-size:1.1rem;margin-bottom:.5rem}
+.value-card p{font-size:.875rem;color:var(--fm-fg-muted);line-height:1.6}
+
+/* TEAM CTA */
+.team-cta{background:var(--fm-ink-900);color:var(--fm-cream-100);border-radius:var(--fm-r-2xl);padding:clamp(3rem,6vw,4.5rem);display:flex;justify-content:space-between;align-items:center;gap:2.5rem;flex-wrap:wrap;position:relative;overflow:hidden;margin-top:4rem}
+.team-cta h3{font-family:var(--fm-font-display);font-size:clamp(1.6rem,3vw,2.4rem);color:var(--fm-cream-100);line-height:1.12}
+.team-cta h3 em{font-style:italic;color:var(--fm-brand)}
+.team-cta p{color:rgba(251,247,238,.55);margin-top:.65rem;max-width:480px;font-size:1rem}
+.team-cta-btns{display:flex;gap:1rem;flex-wrap:wrap;flex-shrink:0}
+
+/* PRIVACY STRIP */
+.privacy-strip{background:var(--fm-ink-900);border-top:1px solid var(--fm-border)}
+.privacy-inner{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:2rem 3.5rem;padding:1.5rem 0}
+.privacy-item{display:flex;align-items:center;gap:.5rem;font-size:.85rem;font-weight:500;color:var(--fm-brand)}
+.privacy-icon{color:var(--fm-brand);flex-shrink:0}
+.privacy-link{color:var(--fmam-100);font-weight:600;font-size:.85rem}
+
+/* FOOTER */
+footer{background:var(--fm-ink-900);padding:clamp(3rem,6vw,5rem) 0 2.5rem}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;margin-bottom:3rem}
+.footer-mark{width:40px;height:40px;margin-bottom:1rem}
+.footer-tagline{color:rgba(251,247,238,.32);font-size:.875rem;line-height:1.65;max-width:260px;margin-top:.5rem}
+.footer-col h5{color:rgba(251,247,238,.38);font-size:.72rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase;margin-bottom:1rem}
+.footer-col a{display:block;color:rgba(251,247,238,.55);font-size:.9rem;margin-bottom:.6rem;transition:color .15s}
+.footer-col a:hover{color:var(--fm-cream-100)}
+.footer-bottom{border-top:1px solid rgba(251,247,238,.07);padding-top:1.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+.footer-copy{color:rgba(251,247,238,.28);font-size:.8rem}
+.footer-legal{display:flex;gap:1.5rem}
+.footer-legal a{color:rgba(251,247,238,.28);font-size:.8rem;transition:color .15s}
+.footer-legal a:hover{color:rgba(251,247,238,.55)}
+
+@media(max-width:900px){.story-grid{grid-template-columns:1fr}.entity-cards{grid-template-columns:1fr}.values-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:640px){.nav-links{display:none}.hamburger{display:flex}.values-grid{grid-template-columns:1fr}.footer-grid{grid-template-columns:1fr 1fr;gap:2rem}.team-cta{flex-direction:column}.privacy-inner{flex-direction:column;align-items:flex-start;padding:0 2rem;gap:.85rem}}
+@media(max-width:500px){.footer-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="fluidmedical-home.html" class="nav-logo" aria-label="Fluid Medical">
+    <div class="nav-mark">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><defs><linearGradient id="nm" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#D4A943"/><stop offset="55%" stop-color="#B58A2E"/><stop offset="100%" stop-color="#8A6822"/></linearGradient></defs><circle cx="32" cy="32" r="32" fill="#131211"/><circle cx="32" cy="32" r="29.5" fill="none" stroke="url(#nm)" stroke-width="1.6"/><path d="M11 34 C 17 22, 23 46, 32 32 S 46 16, 53 28" fill="none" stroke="url(#nm)" stroke-width="3.2" stroke-linecap="round"/></svg>
+    </div>
+    <img src="assets/wordmarks/fluid-medical-wordmark-brass.png" alt="Fluid Medical" class="nav-wordmark">
+  </a>
+  <div class="nav-links">
+    <a href="fluidmedical-home.html">Home</a>
+    <a href="fluidmedical-platform.html">Platform</a>
+    <a href="fluidmedical-about.html" class="active">About</a>
+    <a href="fluidmedical-security.html">Security &amp; Data</a>
+    <a href="fluidmedical-contact.html">Contact</a>
+    <a href="fluidmedical-contact.html" class="btn-nav">Get Oria</a>
+  </div>
+  <button class="hamburger" onclick="toggleMenu()" aria-label="Menu"><span></span><span></span><span></span></button>
+</nav>
+<div class="mob" id="mob">
+  <a href="fluidmedical-home.html">Home</a>
+  <a href="fluidmedical-platform.html">Platform</a>
+  <a href="fluidmedical-about.html">About</a>
+  <a href="fluidmedical-security.html">Security &amp; Data</a>
+  <a href="fluidmedical-contact.html">Contact</a>
+  <a href="fluidmedical-contact.html" class="btn-nav">Get Oria</a>
+</div>
+
+<!-- PAGE HERO -->
+<section class="page-hero">
+  <div class="topo topo--ink">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 600" preserveAspectRatio="xMidYMid slice"><g fill="none" stroke="currentColor" stroke-width="1"><ellipse cx="1100" cy="300" rx="580" ry="360" transform="rotate(-8 1100 300)"/><ellipse cx="1100" cy="300" rx="490" ry="285" transform="rotate(-8 1100 300)"/><ellipse cx="1100" cy="300" rx="400" ry="215" transform="rotate(-8 1100 300)"/><ellipse cx="1100" cy="300" rx="310" ry="148" transform="rotate(-8 1100 300)"/><ellipse cx="150" cy="500" rx="240" ry="155" transform="rotate(14 150 500)"/><ellipse cx="150" cy="500" rx="170" ry="108" transform="rotate(14 150 500)"/></g></svg>
+  </div>
+  <div class="container">
+    <div class="page-hero-inner">
+      <div class="page-hero-eyebrow"><span class="page-hero-eyebrow-line"></span>Our Story</div>
+      <h1>Health Intelligence.<br><em>Within reach.</em></h1>
+      <p class="page-hero-lead">Fluid Medical was founded on a simple idea: the information you need to stay healthy should not be locked behind a clinic visit, a lab requisition, or a data broker's paywall.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PRIVACY STRIP -->
+<div class="privacy-strip">
+  <div class="container">
+    <div class="privacy-inner">
+      <div class="privacy-item"><svg class="privacy-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg><span>End-to-end encrypted</span></div>
+      <div class="privacy-item"><svg class="privacy-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span>Permission-based sharing only</span></div>
+      <div class="privacy-item"><svg class="privacy-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>Never sold to advertisers or insurers</span></div>
+      <div class="privacy-item"><a href="fluidmedical-security.html" class="privacy-link">Data sovereignty policy →</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- MISSION SECTION -->
+<section class="section-pad" style="position:relative;overflow:hidden">
+  <div class="topo topo--cream">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 900" preserveAspectRatio="xMidYMid slice"><g fill="none" stroke="currentColor" stroke-width="1"><ellipse cx="260" cy="380" rx="440" ry="290" transform="rotate(6 260 380)"/><ellipse cx="260" cy="380" rx="360" ry="225" transform="rotate(6 260 380)"/><ellipse cx="260" cy="380" rx="280" ry="164" transform="rotate(6 260 380)"/></g></svg>
+  </div>
+  <div class="container">
+    <div class="story-grid">
+      <div>
+        <div class="fm-eyebrow" style="margin-bottom:1.25rem">Why we exist</div>
+        <h2 class="fm-h2" style="margin-bottom:1.75rem">Health data should work <em>for you.</em></h2>
+        <div class="story-prose">
+          <p>Most health technology extracts value from users. It aggregates data, sells insights to insurers and advertisers, and leaves individuals with nothing but an app they paid for. We built Fluid Medical to invert that model entirely.</p>
+          <p>Our urinalysis platform — Oria — gives individuals access to the kind of biomarker tracking that previously required a clinical setting. A simple strip, scanned with your phone, returns results across up to 60 active markers. The data stays with you. It is encrypted, permissioned, and never sold.</p>
+          <p>At the same time, we built infrastructure that enables organisations — long-term care homes, employers, clinical research teams — to deploy population-level health monitoring without compromising individual sovereignty.</p>
+        </div>
+
+        <blockquote class="pull-quote">
+          </h2>If your health data is being monetised by someone else, it is not <em>YOUR</em> health data.</h2>
+        </blockquote>
+
+        <div class="story-prose">
+          <p>That principle shapes every product decision we make: from the cryptographic architecture beneath Oria, to the contractual commitments we make to every user, to the deliberate choice to remain headquartered in Vancouver under Canadian data law.</p>
+        </div>
+      </div>
+
+      <div>
+        <div style="background:var(--fm-ink-900);border-radius:var(--fm-r-2xl);padding:2.5rem;color:var(--fm-cream-100);position:sticky;top:calc(var(--fm-nav-h) + 2rem)">
+          <div class="fm-eyebrow no-rule" style="margin-bottom:1.25rem;color:rgba(181,138,46,.7)">By the numbers</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem">
+            <div>
+              <div style="font-family:var(--fm-font-display);font-size:2.5rem;letter-spacing:-.025em;color:var(--fm-cream-100)">60+</div>
+              <div style="font-size:.82rem;color:rgba(251,247,238,.4);margin-top:.2rem">Active biomarkers</div>
+            </div>
+            <div>
+              <div style="font-family:var(--fm-font-display);font-size:2.5rem;letter-spacing:-.025em;color:var(--fm-cream-100)">7</div>
+              <div style="font-size:.82rem;color:rgba(251,247,238,.4);margin-top:.2rem">Patents held</div>
+            </div>
+            <div>
+              <div style="font-family:var(--fm-font-display);font-size:2.5rem;letter-spacing:-.025em;color:var(--fm-cream-100)">10</div>
+              <div style="font-size:.82rem;color:rgba(251,247,238,.4);margin-top:.2rem">Biomarker tiers</div>
+            </div>
+            <div>
+              <div style="font-family:var(--fm-font-display);font-size:2.5rem;letter-spacing:-.025em;color:var(--fm-cream-100)">42K</div>
+              <div style="font-size:.82rem;color:rgba(251,247,238,.4);margin-top:.2rem">Platform users</div>
+            </div>
+          </div>
+          <div style="margin-top:2rem;padding-top:1.75rem;border-top:1px solid rgba(251,247,238,.08)">
+            <div style="font-size:.82rem;color:rgba(251,247,238,.35);line-height:1.65">Fluid Medical is a wholly owned subsidiary of <strong style="color:rgba(251,247,238,.55)">Fluid Scientific Inc.</strong> — the data infrastructure and intellectual property holding company incorporated in British Columbia, Canada.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TWO ENTITIES -->
+<section class="section-pad" style="background:var(--fm-bg-alt);position:relative;overflow:hidden">
+  <div class="container">
+    <div style="max-width:640px;margin-bottom:.5rem">
+      <div class="fm-eyebrow" style="margin-bottom:1.25rem">The Organisation</div>
+      <h2 class="fm-h2">Two entities. One <em>mission.</em></h2>
+      <p class="fm-lead" style="margin-top:1rem">Fluid Medical and Fluid Scientific are distinct legal entities by design — separating the consumer product from the IP and infrastructure layer beneath it.</p>
+    </div>
+    <div class="entity-cards">
+      <div class="entity-card ec-fluid-medical">
+        <div style="margin-bottom:1.75rem">
+          <img src="assets/wordmarks/fluid-medical-wordmark-brass.png" alt="Fluid Medical" style="height:70px;width:auto;display:block">
+        </div>
+        <p class="entity-card p">The product company. Fluid Medical builds and operates Oria — the consumer health platform — and manages all direct relationships with individuals, healthcare organisations, and enterprise clients.</p>
+        <ul style="margin-top:1.25rem;display:flex;flex-direction:column;gap:.65rem">
+          <li style="display:flex;align-items:flex-start;gap:.6rem;font-size:.875rem;color:var(--fm-fg-muted)"><svg style="flex-shrink:0;margin-top:2px;color:var(--fm-brand)" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Oria consumer app (iOS &amp; Android)</li>
+          <li style="display:flex;align-items:flex-start;gap:.6rem;font-size:.875rem;color:var(--fm-fg-muted)"><svg style="flex-shrink:0;margin-top:2px;color:var(--fm-brand)" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Fluid Precision strip manufacturing</li>
+          <li style="display:flex;align-items:flex-start;gap:.6rem;font-size:.875rem;color:var(--fm-fg-muted)"><svg style="flex-shrink:0;margin-top:2px;color:var(--fm-brand)" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Enterprise and institutional contracts</li>
+          <li style="display:flex;align-items:flex-start;gap:.6rem;font-size:.875rem;color:var(--fm-fg-muted)"><svg style="flex-shrink:0;margin-top:2px;color:var(--fm-brand)" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Clinical partnerships and research</li>
+        </ul>
+        <div class="entity-loc">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          Vancouver, BC, Canada
+        </div>
+      </div>
+
+      <div class="entity-card ec-fluid-sci">
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:1.75rem">
+          <img src="assets/wordmarks/2026LogoBlackWhite.png" alt="Fluid Scientific mark" style="width:70px;height:70px;flex-shrink:0;border-radius:50%">
+          <img src="assets/wordmarks/FLUIDSCIENTIFICWORDMARKBlack.png" alt="Fluid Scientific" style="height:70px;width:auto;display:block">
+        </div>
+         <p class="entity-card p">The IP and infrastructure holding company. Fluid Scientific owns the patents, the sovereign data architecture, and the platform layer that Fluid Medical licenses. This structure protects the core IP.</p>
+        <ul style="margin-top:1.25rem;display:flex;flex-direction:column;gap:.65rem">
+          <li style="display:flex;align-items:flex-start;gap:.6rem;font-size:.875rem;color:var(--fm-fg-muted)"><svg style="flex-shrink:0;margin-top:2px;color:#4A9EBF" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Patent portfolio — 7 active patents</li>
+          <li style="display:flex;align-items:flex-start;gap:.6rem;font-size:.875rem;color:var(--fm-fg-muted)"><svg style="flex-shrink:0;margin-top:2px;color:#4A9EBF" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Sovereign data architecture &amp; hosting</li>
+          <li style="display:flex;align-items:flex-start;gap:.6rem;font-size:.875rem;color:var(--fm-fg-muted)"><svg style="flex-shrink:0;margin-top:2px;color:#4A9EBF" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>White-label platform licensing</li>
+          <li style="display:flex;align-items:flex-start;gap:.6rem;font-size:.875rem;color:var(--fm-fg-muted)"><svg style="flex-shrink:0;margin-top:2px;color:#4A9EBF" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>R&amp;D and strip biomarker science</li>
+        </ul>
+        <div class="entity-loc">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          Vancouver, BC, Canada
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TIMELINE -->
+<section class="section-pad" style="position:relative;overflow:hidden">
+  <div class="topo topo--cream">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 900" preserveAspectRatio="xMidYMid slice"><g fill="none" stroke="currentColor" stroke-width="1"><ellipse cx="1180" cy="420" rx="460" ry="310" transform="rotate(-10 1180 420)"/><ellipse cx="1180" cy="420" rx="378" ry="242" transform="rotate(-10 1180 420)"/><ellipse cx="1180" cy="420" rx="298" ry="178" transform="rotate(-10 1180 420)"/></g></svg>
+  </div>
+  <div class="container">
+    <div style="display:grid;grid-template-columns:1fr 2fr;gap:5rem;align-items:start">
+      <div>
+        <div class="fm-eyebrow" style="margin-bottom:1.25rem">Progress</div>
+        <h2 class="fm-h2">How we got <em>here.</em></h2>
+        <p class="fm-lead" style="margin-top:1rem">From a single biomarker idea to a full-platform health intelligence system — built slowly, deliberately, and with data sovereignty at every step.</p>
+      </div>
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-year">2019</div>
+          <div class="tl-title">The first strip</div>
+          <div class="tl-desc">Proof-of-concept urinalysis strip capable of reading pH and glucose via smartphone camera. Patent application filed.</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-year">2020–21</div>
+          <div class="tl-title">Biomarker expansion</div>
+          <div class="tl-desc">Strip technology extended to 18 markers across two foundational tiers. Fluid Scientific incorporated to hold IP. Accuracy validation across clinical partners in BC.</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-year">2022</div>
+          <div class="tl-title">Sovereign data architecture</div>
+          <div class="tl-desc">Purpose-built data infrastructure deployed — end-to-end encryption, permission-based sharing, on-Canadian-soil hosting. No third-party data access by default.</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-year">2023</div>
+          <div class="tl-title">Platform and Oria launch</div>
+          <div class="tl-desc">Consumer platform launched as Oria. Women's Health and Men's Health panels introduced. DailySignal wearable integration released.</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-year">2024–25</div>
+          <div class="tl-title">Enterprise and institutional</div>
+          <div class="tl-desc">Long-term care and employer wellness programmes deployed. 42,000 active platform users. 7 patents held across strip chemistry, optical reading, and data architecture.</div>
+        </div>
+        <div class="tl-item" style="margin-bottom:0">
+          <div class="tl-dot" style="background:rgba(181,138,46,.35);box-shadow:none"></div>
+          <div class="tl-year" style="color:rgba(181,138,46,.5)">2026 onwards</div>
+          <div class="tl-title" style="color:var(--fm-fg-muted)">My Records &amp; full platform</div>
+          <div class="tl-desc">Clinical document integration (My Records) launching 2027. 10-tier strip system completing validation. Longitudinal AI insight layer in development.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VALUES -->
+<section class="section-pad" style="background:var(--fm-ink-900);color:var(--fm-cream-100);position:relative;overflow:hidden">
+  <div class="topo topo--ink">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 700" preserveAspectRatio="xMidYMid slice"><g fill="none" stroke="currentColor" stroke-width="1"><ellipse cx="700" cy="350" rx="640" ry="360" transform="rotate(-4 700 350)"/><ellipse cx="700" cy="350" rx="540" ry="285" transform="rotate(-4 700 350)"/><ellipse cx="700" cy="350" rx="440" ry="215" transform="rotate(-4 700 350)"/></g></svg>
+  </div>
+  <div class="container">
+    <div style="max-width:600px;margin-bottom:.5rem">
+      <div class="fm-eyebrow" style="margin-bottom:1.25rem">What we stand for</div>
+      <h2 class="fm-h2" style="color:var(--fm-cream-100)">Principles that are <em>non-negotiable.</em></h2>
+    </div>
+    <div class="values-grid">
+      <div class="value-card" style="background:rgba(251,247,238,.04);border-color:rgba(251,247,238,.08)">
+        <div class="value-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--fm-brand)" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+        <h4 style="color:var(--fm-cream-100)">Data sovereignty</h4>
+        <p style="color:rgba(251,247,238,.45)">Your health data belongs to you. Not to us, not to an insurer, not to a platform. We built the infrastructure to make this promise enforceable, not just contractual.</p>
+      </div>
+      <div class="value-card" style="background:rgba(251,247,238,.04);border-color:rgba(251,247,238,.08)">
+        <div class="value-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--fm-brand)" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
+        <h4 style="color:var(--fm-cream-100)">Radical transparency</h4>
+        <p style="color:rgba(251,247,238,.45)">We publish our data architecture, our accuracy validation methodology, and our privacy commitments in full. No dark patterns. No fine print that contradicts the headline.</p>
+      </div>
+      <div class="value-card" style="background:rgba(251,247,238,.04);border-color:rgba(251,247,238,.08)">
+        <div class="value-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--fm-brand)" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div>
+        <h4 style="color:var(--fm-cream-100)">Access, not exclusivity</h4>
+        <p style="color:rgba(251,247,238,.45)">We build for people who have been underserved by health technology — not just the quantified-self early adopter. Oria's core tier is free because access to your own biomarkers should not be a luxury.</p>
+      </div>
+    </div>
+
+    <div class="team-cta">
+      <div class="topo" style="opacity:.06"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 400"><g fill="none" stroke="white" stroke-width="1"><ellipse cx="750" cy="200" rx="380" ry="250"/><ellipse cx="750" cy="200" rx="290" ry="188"/><ellipse cx="750" cy="200" rx="205" ry="130"/></g></svg></div>
+      <div>
+        <h3>We are <em>hiring.</em></h3>
+        <p>We are a small, focused team building technology that should exist. If you want to work on health data infrastructure that genuinely puts users first, we would love to hear from you.</p>
+      </div>
+      <div class="team-cta-btns">
+        <a href="fluidmedical-contact.html" class="btn btn-brass">Get in Touch</a>
+        <a href="mailto:ash@fluidscientific.com" class="btn" style="background:rgba(251,247,238,.08);color:var(--fm-cream-100);border:1px solid rgba(251,247,238,.14)">ash@fluidscientific.com</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-mark"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><defs><linearGradient id="ff" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#D4A943"/><stop offset="55%" stop-color="#B58A2E"/><stop offset="100%" stop-color="#8A6822"/></linearGradient></defs><circle cx="32" cy="32" r="32" fill="#131211"/><circle cx="32" cy="32" r="29.5" fill="none" stroke="url(#ff)" stroke-width="1.6"/><path d="M11 34 C 17 22, 23 46, 32 32 S 46 16, 53 28" fill="none" stroke="url(#ff)" stroke-width="3.2" stroke-linecap="round"/></svg></div>
+        <p class="footer-tagline">Primary Health Care Within Reach. Built on Fluid Scientific's sovereign data infrastructure. Vancouver, BC, Canada.</p>
+      </div>
+      <div class="footer-col"><h5>Platform</h5><a href="fluidmedical-platform.html">Fluid Precision</a><a href="fluidmedical-platform.html">DailySignal</a><a href="fluidmedical-platform.html">Fluid+Me</a><a href="fluidmedical-platform.html">My Records</a><a href="fluidmedical-demo.html">Live Demo</a></div>
+      <div class="footer-col"><h5>Company</h5><a href="fluidmedical-about.html">About Us</a><a href="fluidmedical-security.html">Security &amp; Data</a><a href="fluidmedical-contact.html">Contact</a><a href="https://fluidscientific.com" target="_blank" rel="noopener">Fluid Scientific</a></div>
+      <div class="footer-col"><h5>Get Oria</h5><a href="fluidmedical-contact.html">Individuals</a><a href="fluidmedical-contact.html">Organisations</a><a href="fluidmedical-contact.html">Investors &amp; Media</a><a href="mailto:ash@fluidscientific.com">ash@fluidscientific.com</a></div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">&copy; 2026 Fluid Medical Inc. Vancouver, BC, Canada.</div>
+      <div class="footer-legal"><a href="#">Privacy Policy</a><a href="#">Terms of Service</a><a href="#">Accessibility</a></div>
+    </div>
+  </div>
+</footer>
+
+<script>
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>10),{passive:true});
+function toggleMenu(){document.getElementById('mob').classList.toggle('open')}
+document.querySelectorAll('.mob a').forEach(l=>l.addEventListener('click',()=>document.getElementById('mob').classList.remove('open')));
+</script>
+</body>
+</html>
