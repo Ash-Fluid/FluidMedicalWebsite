@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Security &amp; Data — Fluid Medical</title>
+<link rel="stylesheet" href="colors_and_type.css">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--fm-font-sans);background:var(--fm-bg);color:var(--fm-fg);line-height:var(--fm-leading-relaxed);-webkit-font-smoothing:antialiased}
+img{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+ul{list-style:none}
+.container{max-width:var(--fm-container);margin:0 auto;padding:0 clamp(1.5rem,5vw,4rem);position:relative;z-index:1}
+.section-pad{padding:clamp(5rem,10vw,9rem) 0}
+.topo{position:absolute;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.topo svg{width:100%;height:100%}
+.topo--ink{opacity:.08;color:var(--fm-cream-100)}
+.topo--cream{opacity:.05;color:var(--fm-ink-800)}
+
+/* NAV */
+#nav{position:fixed;top:0;left:0;right:0;z-index:300;height:90px;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(1.5rem,5vw,4rem);background:rgba(14,13,11,.96);backdrop-filter:blur(16px);border-bottom:1px solid rgba(251,247,238,.06);transition:box-shadow .22s}
+#nav.scrolled{box-shadow:0 4px 32px rgba(14,13,11,.55)}
+.nav-logo{display:flex;align-items:center;gap:11px}
+.nav-mark{width:68px;height:68px;flex-shrink:0}
+.nav-wordmark{height:68px;width:auto}
+.nav-links{display:flex;align-items:center;gap:1.75rem}
+.nav-links a{color:rgba(251,247,238,.5);font-size:.9375rem;font-weight:500;transition:color .15s}
+.nav-links a:hover,.nav-links a.active{color:var(--fm-cream-100)}
+.btn-nav{background:var(--fm-brand);color:var(--fm-ink-900);padding:.5rem 1.3rem;border-radius:var(--fm-r-sm);font-size:.9rem;font-weight:700;transition:background .15s,transform .15s}
+.btn-nav:hover{background:var(--fm-brand-hover);transform:translateY(-1px);color:var(--fm-ink-900)}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:4px}
+.hamburger span{display:block;width:22px;height:2px;background:var(--fm-cream-100);border-radius:2px}
+.mob{display:none;position:fixed;top:90px;left:0;right:0;z-index:299;background:var(--fm-ink-900);padding:1.5rem 2rem 2rem;border-bottom:1px solid rgba(251,247,238,.08);flex-direction:column}
+.mob.open{display:flex}
+.mob a{color:var(--fm-cream-100);font-size:1rem;font-weight:500;padding:.7rem 0;border-bottom:1px solid rgba(251,247,238,.07)}
+.mob .btn-nav{margin-top:.75rem;text-align:center;display:block;border:none}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:8px;padding:.875rem 1.75rem;border-radius:var(--fm-r-md);font-family:var(--fm-font-sans);font-size:1rem;font-weight:600;cursor:pointer;border:none;transition:background .15s,transform .15s,box-shadow .2s;text-decoration:none}
+.btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(20,18,14,.22)}
+.btn-brass{background:var(--fm-brand);color:var(--fm-ink-900)}
+.btn-brass:hover{background:var(--fm-brand-hover)}
+
+/* PAGE HERO */
+.page-hero{padding-top:calc(90px + 5rem);padding-bottom:5rem;background:var(--fm-ink-900);color:var(--fm-cream-100);position:relative;overflow:hidden}
+.page-hero-inner{max-width:760px}
+.page-hero-eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:.75rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--fm-brand);margin-bottom:1.4rem}
+.page-hero-eyebrow-line{width:22px;height:1px;background:var(--fm-brand)}
+.page-hero h1{font-family:var(--fm-font-display);font-size:clamp(2.6rem,6vw,4.5rem);line-height:1.08;letter-spacing:-.025em;color:var(--fm-cream-100)}
+.page-hero h1 em{font-style:italic;color:var(--fm-brand)}
+.page-hero-lead{font-size:clamp(1rem,1.6vw,1.125rem);color:rgba(251,247,238,.55);max-width:580px;margin-top:1.5rem;line-height:1.72}
+
+/* COMMITMENT CARDS */
+.commit-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;margin-top:3.5rem}
+.commit-card{border-radius:var(--fm-r-xl);padding:2rem;background:var(--fm-paper);border:1px solid var(--fm-border);box-shadow:var(--fm-shadow-1);position:relative;overflow:hidden}
+.commit-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--fm-brand)}
+.commit-icon{width:46px;height:46px;border-radius:var(--fm-r-md);background:var(--fm-brand-tint);display:flex;align-items:center;justify-content:center;margin-bottom:1.2rem}
+.commit-card h3{font-family:var(--fm-font-display);font-size:1.25rem;letter-spacing:-.01em;margin-bottom:.6rem}
+.commit-card p{font-size:.9rem;color:var(--fm-fg-muted);line-height:1.65}
+
+/* ARCHITECTURE DIAGRAM */
+.arch-block{background:var(--fm-ink-900);color:var(--fm-cream-100);border-radius:var(--fm-r-2xl);padding:clamp(2.5rem,5vw,4rem);position:relative;overflow:hidden;margin-top:3.5rem}
+.arch-layers{display:flex;flex-direction:column;gap:1rem;position:relative;z-index:1}
+.arch-layer{display:flex;align-items:center;gap:1.5rem;padding:1.25rem 1.5rem;border-radius:var(--fm-r-lg);border:1px solid rgba(251,247,238,.08)}
+.arch-layer-num{font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--fm-brand);min-width:2rem}
+.arch-layer-title{font-family:var(--fm-font-sans);font-weight:600;font-size:.9375rem;color:var(--fm-cream-100);min-width:200px}
+.arch-layer-desc{font-size:.875rem;color:rgba(251,247,238,.45);line-height:1.55;flex:1}
+.arch-layer-badge{flex-shrink:0;font-size:.72rem;font-weight:700;padding:.2rem .65rem;border-radius:var(--fm-r-sm);background:rgba(181,138,46,.12);color:var(--fm-brand)}
+.arch-layer:nth-child(1){background:rgba(181,138,46,.06)}
+.arch-layer:nth-child(2){background:rgba(79,122,79,.06)}
+.arch-layer:nth-child(3){background:rgba(74,158,191,.06)}
+.arch-layer:nth-child(4){background:rgba(255,255,255,.03)}
+
+/* POLICY SECTIONS */
+.policy-grid{display:grid;grid-template-columns:1fr 2fr;gap:5rem;align-items:start}
+.policy-toc{position:sticky;top:calc(var(--fm-nav-h) + 2rem)}
+.policy-toc a{display:block;padding:.55rem 0;font-size:.9rem;color:var(--fm-fg-muted);border-left:2px solid var(--fm-border);padding-left:1rem;margin-bottom:.2rem;transition:color .15s,border-color .15s}
+.policy-toc a:hover,.policy-toc a.active{color:var(--fm-brand);border-left-color:var(--fm-brand)}
+.policy-section{padding-top:3.5rem;scroll-margin-top:calc(var(--fm-nav-h) + 2rem)}
+.policy-section:first-child{padding-top:0}
+.policy-section h3{font-family:var(--fm-font-display);font-size:1.75rem;letter-spacing:-.015em;margin-bottom:1rem}
+.policy-section p{font-size:.9625rem;line-height:1.75;color:var(--fm-fg);margin-bottom:1em}
+.policy-section ul{margin:1em 0;display:flex;flex-direction:column;gap:.55rem}
+.policy-section ul li{display:flex;align-items:flex-start;gap:.65rem;font-size:.9375rem;color:var(--fm-fg-muted);line-height:1.6}
+.check-icon{flex-shrink:0;margin-top:2px;color:var(--fm-brand)}
+.policy-callout{background:var(--fm-brand-tint);border:1px solid rgba(181,138,46,.22);border-radius:var(--fm-r-lg);padding:1.25rem 1.5rem;margin:1.5rem 0}
+.policy-callout-label{font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--fm-brand);margin-bottom:.4rem}
+.policy-callout p{font-size:.9rem;color:var(--fm-ink-700);margin-bottom:0;line-height:1.6}
+
+/* COMPLIANCE BADGES */
+.compliance-row{display:flex;flex-wrap:wrap;gap:1rem;margin-top:3rem}
+.compliance-badge{display:flex;align-items:center;gap:.75rem;padding:1rem 1.5rem;background:var(--fm-paper);border:1px solid var(--fm-border);border-radius:var(--fm-r-lg);box-shadow:var(--fm-shadow-1)}
+.compliance-badge-icon{width:36px;height:36px;border-radius:var(--fm-r-sm);background:var(--fm-brand-tint);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.compliance-badge-name{font-weight:700;font-size:.875rem;color:var(--fm-fg-strong)}
+.compliance-badge-desc{font-size:.75rem;color:var(--fm-fg-muted)}
+
+/* PRIVACY STRIP */
+.privacy-strip{background:var(--fm-cream-200);border-top:1px solid var(--fm-border)}
+.privacy-inner{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:2rem 3.5rem;padding:1.5rem 0}
+.privacy-item{display:flex;align-items:center;gap:.5rem;font-size:.85rem;font-weight:500;color:var(--fm-fg-muted)}
+.privacy-icon{color:var(--fm-brand);flex-shrink:0}
+.privacy-link{color:var(--fm-brand);font-weight:600;font-size:.85rem}
+
+/* FOOTER */
+footer{background:var(--fm-ink-900);padding:clamp(3rem,6vw,5rem) 0 2.5rem}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;margin-bottom:3rem}
+.footer-mark{width:40px;height:40px;margin-bottom:1rem}
+.footer-tagline{color:rgba(251,247,238,.32);font-size:.875rem;line-height:1.65;max-width:260px;margin-top:.5rem}
+.footer-col h5{color:rgba(251,247,238,.38);font-size:.72rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase;margin-bottom:1rem}
+.footer-col a{display:block;color:rgba(251,247,238,.55);font-size:.9rem;margin-bottom:.6rem;transition:color .15s}
+.footer-col a:hover{color:var(--fm-cream-100)}
+.footer-bottom{border-top:1px solid rgba(251,247,238,.07);padding-top:1.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+.footer-copy{color:rgba(251,247,238,.28);font-size:.8rem}
+.footer-legal{display:flex;gap:1.5rem}
+.footer-legal a{color:rgba(251,247,238,.28);font-size:.8rem;transition:color .15s}
+.footer-legal a:hover{color:rgba(251,247,238,.55)}
+
+@media(max-width:980px){.commit-grid{grid-template-columns:1fr 1fr}.policy-grid{grid-template-columns:1fr}.policy-toc{position:static;display:flex;flex-wrap:wrap;gap:.5rem 0}}
+@media(max-width:640px){.nav-links{display:none}.hamburger{display:flex}.commit-grid{grid-template-columns:1fr}.arch-layer{flex-direction:column;align-items:flex-start;gap:.5rem}.arch-layer-title{min-width:auto}.footer-grid{grid-template-columns:1fr 1fr;gap:2rem}.privacy-inner{flex-direction:column;align-items:flex-start;padding:0 2rem;gap:.85rem}}
+@media(max-width:500px){.footer-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="fluidmedical-home.html" class="nav-logo" aria-label="Fluid Medical">
+    <div class="nav-mark">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><defs><linearGradient id="nm" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#D4A943"/><stop offset="55%" stop-color="#B58A2E"/><stop offset="100%" stop-color="#8A6822"/></linearGradient></defs><circle cx="32" cy="32" r="32" fill="#131211"/><circle cx="32" cy="32" r="29.5" fill="none" stroke="url(#nm)" stroke-width="1.6"/><path d="M11 34 C 17 22, 23 46, 32 32 S 46 16, 53 28" fill="none" stroke="url(#nm)" stroke-width="3.2" stroke-linecap="round"/></svg>
+    </div>
+    <img src="assets/wordmarks/fluid-medical-wordmark-brass.png" alt="Fluid Medical" class="nav-wordmark">
+  </a>
+  <div class="nav-links">
+    <a href="fluidmedical-home.html">Home</a>
+    <a href="fluidmedical-platform.html">Platform</a>
+    <a href="fluidmedical-about.html">About</a>
+    <a href="fluidmedical-security.html" class="active">Security &amp; Data</a>
+    <a href="fluidmedical-contact.html">Contact</a>
+    <a href="fluidmedical-contact.html" class="btn-nav">Get Oria</a>
+  </div>
+  <button class="hamburger" onclick="toggleMenu()" aria-label="Menu"><span></span><span></span><span></span></button>
+</nav>
+<div class="mob" id="mob">
+  <a href="fluidmedical-home.html">Home</a>
+  <a href="fluidmedical-platform.html">Platform</a>
+  <a href="fluidmedical-about.html">About</a>
+  <a href="fluidmedical-security.html">Security &amp; Data</a>
+  <a href="fluidmedical-contact.html">Contact</a>
+  <a href="fluidmedical-contact.html" class="btn-nav">Get Oria</a>
+</div>
+
+<!-- PAGE HERO -->
+<section class="page-hero">
+  <div class="topo topo--ink">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 600" preserveAspectRatio="xMidYMid slice"><g fill="none" stroke="currentColor" stroke-width="1"><ellipse cx="200" cy="300" rx="560" ry="360" transform="rotate(10 200 300)"/><ellipse cx="200" cy="300" rx="465" ry="280" transform="rotate(10 200 300)"/><ellipse cx="200" cy="300" rx="372" ry="210" transform="rotate(10 200 300)"/><ellipse cx="200" cy="300" rx="285" ry="148" transform="rotate(10 200 300)"/><ellipse cx="1250" cy="450" rx="280" ry="185" transform="rotate(-6 1250 450)"/><ellipse cx="1250" cy="450" rx="200" ry="130" transform="rotate(-6 1250 450)"/></g></svg>
+  </div>
+  <div class="container">
+    <div class="page-hero-inner">
+      <div class="page-hero-eyebrow"><span class="page-hero-eyebrow-line"></span>Data Sovereignty</div>
+      <h1>Your data. Your <em>rules.</em></h1>
+      <p class="page-hero-lead">We designed Oria's infrastructure around one constraint: your health data should be mathematically impossible for us to misuse — not just contractually prohibited.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CORE COMMITMENTS -->
+<section class="section-pad" style="position:relative;overflow:hidden">
+  <div class="topo topo--cream">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 900" preserveAspectRatio="xMidYMid slice"><g fill="none" stroke="currentColor" stroke-width="1"><ellipse cx="1100" cy="350" rx="500" ry="320" transform="rotate(-8 1100 350)"/><ellipse cx="1100" cy="350" rx="410" ry="250" transform="rotate(-8 1100 350)"/><ellipse cx="1100" cy="350" rx="320" ry="185" transform="rotate(-8 1100 350)"/></g></svg>
+  </div>
+  <div class="container">
+    <div style="max-width:640px;margin-bottom:.5rem">
+      <div class="fm-eyebrow" style="margin-bottom:1.25rem">Core commitments</div>
+      <h2 class="fm-h2">Five things we will <em>never</em> do.</h2>
+      <p class="fm-lead" style="margin-top:1rem">These are not aspirational. They are baked into the architecture, not just the terms of service.</p>
+    </div>
+    <div class="commit-grid">
+      <div class="commit-card">
+        <div class="commit-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--fm-brand)" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg></div>
+        <h3>No data selling</h3>
+        <p>We do not sell, lease, or syndicate your health data to any third party — not insurers, not pharma companies, not data brokers. This is a hard architectural constraint, not a policy that can be reversed by a terms update.</p>
+      </div>
+      <div class="commit-card">
+        <div class="commit-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--fm-brand)" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="23" y1="11" x2="17" y2="11"/></svg></div>
+        <h3>No third-party access</h3>
+        <p>No analytics platform, advertising network, or external service receives access to your individual health records. Aggregate, anonymised research insights — only ever with explicit opt-out consent, and only in fully de-identified form.</p>
+      </div>
+      <div class="commit-card">
+        <div class="commit-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--fm-brand)" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+        <h3>No inference without consent</h3>
+        <p>Oria AI generates insights about your data for your benefit only. We do not build external-facing models trained on individual user data. Your records are not used to improve AI systems without your explicit permission.</p>
+      </div>
+      <div class="commit-card">
+        <div class="commit-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--fm-brand)" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div>
+        <h3>No unencrypted storage</h3>
+        <p>All health records are encrypted at rest using AES-256 with per-user key derivation. Even our own infrastructure team cannot read your records. Encryption keys are derived from your credentials — we do not hold a master key.</p>
+      </div>
+      <div class="commit-card">
+        <div class="commit-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--fm-brand)" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+        <h3>Regional data residency</h3>
+        <p>Your data is stored in the jurisdiction where you are. Canadian users: hosted in Canada under PIPEDA. UAE users: hosted in the UAE under MOHAP and Federal Law No. 2 of 2019. US users: hosted in US infrastructure under HIPAA and applicable state law. We do not move your data across borders for our convenience.</p>
+      </div>
+      <div class="commit-card">
+        <div class="commit-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--fm-brand)" stroke-width="2" stroke-linecap="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></div>
+        <h3>Full portability on exit</h3>
+        <p>You can export your complete health record at any time in standard formats (HL7 FHIR, CSV, PDF). Deleting your account triggers permanent, verified deletion within 30 days — not archiving.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ARCHITECTURE -->
+<section class="section-pad" style="background:var(--fm-bg-alt);position:relative;overflow:hidden">
+  <div class="topo topo--cream">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 900" preserveAspectRatio="xMidYMid slice"><g fill="none" stroke="currentColor" stroke-width="1"><ellipse cx="250" cy="450" rx="460" ry="300" transform="rotate(8 250 450)"/><ellipse cx="250" cy="450" rx="375" ry="235" transform="rotate(8 250 450)"/><ellipse cx="250" cy="450" rx="295" ry="175" transform="rotate(8 250 450)"/></g></svg>
+  </div>
+  <div class="container">
+    <div style="max-width:640px">
+      <div class="fm-eyebrow" style="margin-bottom:1.25rem">Technical architecture</div>
+      <h2 class="fm-h2">Security by <em>design.</em></h2>
+      <p class="fm-lead" style="margin-top:1rem">The architecture is layered so that a breach at any single layer cannot expose readable health data. Here is how it works.</p>
+    </div>
+    <div class="arch-block">
+      <div class="topo topo--ink"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 500"><g fill="none" stroke="currentColor" stroke-width="1"><ellipse cx="750" cy="250" rx="380" ry="280"/><ellipse cx="750" cy="250" rx="295" ry="215"/><ellipse cx="750" cy="250" rx="210" ry="155"/></g></svg></div>
+      <div class="arch-layers">
+        <div class="arch-layer">
+          <div class="arch-layer-num">01</div>
+          <div class="arch-layer-title">Client-side encryption</div>
+          <div class="arch-layer-desc">Health data is encrypted on your device before transmission. The server receives ciphertext only — never plaintext biomarker readings or health records.</div>
+          <div class="arch-layer-badge">AES-256-GCM</div>
+        </div>
+        <div class="arch-layer">
+          <div class="arch-layer-num">02</div>
+          <div class="arch-layer-title">Per-user key derivation</div>
+          <div class="arch-layer-desc">Encryption keys are derived from your credentials using PBKDF2. No centralised key store exists. Fluid Medical staff cannot decrypt your records even with direct database access.</div>
+          <div class="arch-layer-badge">PBKDF2 / HKDF</div>
+        </div>
+        <div class="arch-layer">
+          <div class="arch-layer-num">03</div>
+          <div class="arch-layer-title">Permission-gated sharing</div>
+          <div class="arch-layer-desc">Sharing with a clinician, carer, or organisation requires an active permission grant from you. Revocation takes effect immediately — access tokens expire with zero grace period.</div>
+          <div class="arch-layer-badge">OAuth 2.0 / FHIR</div>
+        </div>
+        <div class="arch-layer">
+          <div class="arch-layer-num">04</div>
+          <div class="arch-layer-title">Regional sovereign hosting</div>
+          <div class="arch-layer-desc">Data is stored in the jurisdiction where you are. Canadian users: infrastructure in British Columbia. UAE users: in-country UAE infrastructure under MOHAP. US users: US infrastructure under HIPAA. We do not move data across borders for operational convenience.</div>
+          <div class="arch-layer-badge">Canada · UAE · US</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPLIANCE & POLICY -->
+<section class="section-pad" style="position:relative;overflow:hidden" id="policy">
+  <div class="topo topo--cream">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 900" preserveAspectRatio="xMidYMid slice"><g fill="none" stroke="currentColor" stroke-width="1"><ellipse cx="1150" cy="400" rx="500" ry="330" transform="rotate(-12 1150 400)"/><ellipse cx="1150" cy="400" rx="405" ry="258" transform="rotate(-12 1150 400)"/><ellipse cx="1150" cy="400" rx="318" ry="192" transform="rotate(-12 1150 400)"/></g></svg>
+  </div>
+  <div class="container">
+    <div class="policy-grid">
+      <div>
+        <div class="fm-eyebrow" style="margin-bottom:1.25rem">Policy</div>
+        <h2 class="fm-h2" style="margin-bottom:2rem">Data sovereignty <em>policy.</em></h2>
+        <nav class="policy-toc" aria-label="Policy sections">
+          <a href="#pipeda" class="active">Compliance by jurisdiction</a>
+          <a href="#hipaa">HIPAA alignment</a>
+          <a href="#retention">Data retention</a>
+          <a href="#breach">Breach response</a>
+          <a href="#ai-data">AI &amp; your data</a>
+          <a href="#org-data">Organisational data</a>
+        </nav>
+      </div>
+
+      <div>
+        <div class="policy-section" id="pipeda">
+          <h3>Compliance by jurisdiction</h3>
+          <p>Fluid Scientific Development Limited is incorporated in British Columbia. We meet the strictest applicable privacy standard in every market we serve — we do not structure our operations to take advantage of looser foreign jurisdictions.</p>
+          <ul>
+            <li><svg class="check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><strong>Canada:</strong> PIPEDA (federal) and British Columbia's PIPA — primary jurisdiction</li>
+            <li><svg class="check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><strong>United States:</strong> HIPAA technical safeguard standards + applicable state law (CCPA, etc.)</li>
+            <li><svg class="check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><strong>UAE:</strong> Federal Law No. 2 of 2019 and MOHAP data residency requirements</li>
+          </ul>
+          <p>Under PIPEDA, individuals have the right to know what personal information we hold, to correct it, and to withdraw consent for its use. These rights are implemented as self-service functions in the Oria app — no support ticket required.</p>
+          <ul>
+            <li><svg class="check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Data access requests processed within 30 days</li>
+            <li><svg class="check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Correction requests processed within 7 business days</li>
+            <li><svg class="check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Consent withdrawal is immediate and irrevocable</li>
+          </ul>
+          <div class="policy-callout">
+            <div class="policy-callout-label">Jurisdiction note</div>
+            <p>We are not incorporated in the US and are not subject to CLOUD Act data requests from foreign governments for data outside US infrastructure. Legitimate law enforcement access requires a court order from the relevant jurisdiction.</p>
+          </div>
+        </div>
+
+        <div class="policy-section" id="hipaa">
+          <h3>HIPAA alignment</h3>
+          <p>While Fluid Medical operates under Canadian law rather than US HIPAA, we design to HIPAA technical safeguard standards for all storage and transmission of health information. This means our architecture satisfies HIPAA's requirements, even where we are not legally obligated to follow them.</p>
+          <p>For enterprise clients operating in the US healthcare system, we can execute Business Associate Agreements and provide HIPAA-aligned infrastructure documentation on request.</p>
+          <ul>
+            <li><svg class="check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Encryption at rest and in transit meets HIPAA technical standards</li>
+            <li><svg class="check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Audit logging on all PHI access events</li>
+            <li><svg class="check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>BAAs available for enterprise clients on request</li>
+          </ul>
+        </div>
+
+        <div class="policy-section" id="retention">
+          <h3>Data retention</h3>
+          <p>We retain your health data for as long as your account is active. If you delete your account, a 7-day recovery window remains before permanent deletion begins. Permanent deletion is verified and confirmed by a system audit log entry — we do not "archive" deleted accounts.</p>
+          <p>You can delete individual records, specific strips, or your full history at any time without deleting your account. Deletion of individual records is immediate and permanent.</p>
+          <ul>
+            <li><svg class="check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Account deletion: 7-day recovery window, then permanent deletion within 30 days</li>
+            <li><svg class="check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Individual records: immediate and permanent</li>
+            <li><svg class="check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Backup copies deleted within the same 30-day window</li>
+          </ul>
+        </div>
+
+        <div class="policy-section" id="breach">
+          <h3>Breach response</h3>
+          <p>In the event of a confirmed data breach, we notify affected users within 72 hours of confirmed discovery — the same standard required by GDPR, and stricter than PIPEDA's "as soon as feasible" requirement. Notification includes: what data was accessed, how, the likely impact, and what we are doing to remediate.</p>
+          <div class="policy-callout">
+            <div class="policy-callout-label">Why this matters architecturally</div>
+            <p>Because health records are encrypted client-side with per-user keys, a breach of our servers yields only ciphertext. An attacker with full database access cannot read a single health record without the corresponding credential-derived key.</p>
+          </div>
+        </div>
+
+        <div class="policy-section" id="ai-data">
+          <h3>AI &amp; your data</h3>
+          <p>Oria's AI features run on your data, for your benefit. We do not train shared AI models on individual health records without explicit, informed, and separately obtained consent.</p>
+          <p>When you use Ask Oria or receive DailySignal pattern insights, the AI processes your data in an isolated inference context. Your records are not added to a shared training corpus by default.</p>
+          <ul>
+            <li><svg class="check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>AI inference is always displayed as insights, not medical advice</li>
+            <li><svg class="check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>No model training on individual records without explicit opt-in</li>
+            <li><svg class="check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Research contributions: anonymous, aggregated, and separately consented</li>
+          </ul>
+        </div>
+
+        <div class="policy-section" id="org-data">
+          <h3>Organisational data</h3>
+          <p>For employers, long-term care homes, and clinical teams using Fluid Medical's enterprise platform: individual health records remain under individual user sovereignty even within an organisational deployment. Organisations see aggregate, de-identified population analytics — not individual records — unless an individual explicitly shares their data.</p>
+          <p>We will not provide your employer or insurer access to your individual records under any circumstances. Organisational contracts explicitly prohibit any attempt to compel individual record access.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- COMPLIANCE BADGES -->
+    <div style="margin-top:5rem;padding-top:3.5rem;border-top:1px solid var(--fm-border)">
+      <div class="fm-eyebrow" style="margin-bottom:1.25rem">Regulatory alignment</div>
+      <h3 class="fm-h3" style="margin-bottom:.5rem">Standards we design <em>to.</em></h3>
+      <div class="compliance-row">
+        <div class="compliance-badge">
+          <div class="compliance-badge-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--fm-brand)" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+          <div><div class="compliance-badge-name">PIPEDA</div><div class="compliance-badge-desc">Canadian federal law — primary jurisdiction</div></div>
+        </div>
+        <div class="compliance-badge">
+          <div class="compliance-badge-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--fm-brand)" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div>
+          <div><div class="compliance-badge-name">HIPAA</div><div class="compliance-badge-desc">US health privacy — technical standards met</div></div>
+        </div>
+        <div class="compliance-badge">
+          <div class="compliance-badge-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--fm-brand)" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+          <div><div class="compliance-badge-name">BC PIPA</div><div class="compliance-badge-desc">British Columbia provincial privacy act</div></div>
+        </div>
+        <div class="compliance-badge">
+          <div class="compliance-badge-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--fm-brand)" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg></div>
+          <div><div class="compliance-badge-name">UAE Federal Law No. 2 / MOHAP</div><div class="compliance-badge-desc">UAE in-country data residency</div></div>
+        </div>
+        <div class="compliance-badge">
+          <div class="compliance-badge-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--fm-brand)" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
+          <div><div class="compliance-badge-name">SOC 2 Type II</div><div class="compliance-badge-desc">In preparation — target 2026</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRIVACY STRIP -->
+<div class="privacy-strip">
+  <div class="container">
+    <div class="privacy-inner">
+      <div class="privacy-item"><svg class="privacy-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg><span>End-to-end encrypted</span></div>
+      <div class="privacy-item"><svg class="privacy-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span>Permission-based sharing only</span></div>
+      <div class="privacy-item"><svg class="privacy-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>Never sold to advertisers or insurers</span></div>
+      <div class="privacy-item"><svg class="privacy-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg><span>UAE MOHAP &amp; regional data residency</span></div>
+      <div class="privacy-item"><a href="#policy" class="privacy-link">Read the full policy above</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-mark"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><defs><linearGradient id="ff" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#D4A943"/><stop offset="55%" stop-color="#B58A2E"/><stop offset="100%" stop-color="#8A6822"/></linearGradient></defs><circle cx="32" cy="32" r="32" fill="#131211"/><circle cx="32" cy="32" r="29.5" fill="none" stroke="url(#ff)" stroke-width="1.6"/><path d="M11 34 C 17 22, 23 46, 32 32 S 46 16, 53 28" fill="none" stroke="url(#ff)" stroke-width="3.2" stroke-linecap="round"/></svg></div>
+        <p class="footer-tagline">Primary Health Care Within Reach. Built on Fluid Scientific's sovereign data infrastructure. Vancouver, BC, Canada.</p>
+      </div>
+      <div class="footer-col"><h5>Platform</h5><a href="fluidmedical-platform.html">Precision</a><a href="fluidmedical-platform.html">DailySignal</a><a href="fluidmedical-platform.html">Me+</a><a href="fluidmedical-platform.html">MyRecords</a><a href="fluidmedical-demo.html">Live Demo</a></div>
+      <div class="footer-col"><h5>Company</h5><a href="fluidmedical-about.html">About Us</a><a href="fluidmedical-security.html">Security &amp; Data</a><a href="fluidmedical-contact.html">Contact</a><a href="https://fluidscientific.com" target="_blank" rel="noopener">Fluid Scientific</a></div>
+      <div class="footer-col"><h5>Get Oria</h5><a href="fluidmedical-contact.html">Individuals</a><a href="fluidmedical-contact.html">Organisations</a><a href="fluidmedical-contact.html">Investors &amp; Media</a><a href="mailto:info@fluidmedical.com">info@fluidmedical.com</a></div>
+    </div>
+      <div style="border-top:1px solid rgba(251,247,238,.07);padding-top:1.5rem;padding-bottom:1.5rem;display:flex;align-items:center;gap:1rem">
+        <a href="https://linkedin.com/company/fluidmedical/" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:.5rem;color:rgba(251,247,238,.45);font-size:.85rem;font-weight:500;transition:color .15s" onmouseover="this.style.color='rgba(251,247,238,.85)'" onmouseout="this.style.color='rgba(251,247,238,.45)'"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>LinkedIn</a>
+      </div>
+    <div class="footer-bottom" style="border-top:none;padding-top:0">
+      <div class="footer-copy">&copy; 2026 Fluid Medical Inc. Vancouver, BC, Canada.</div>
+      <div class="footer-legal"><a href="#">Privacy Policy</a><a href="#">Terms of Service</a><a href="#">Accessibility</a></div>
+    </div>
+  </div>
+</footer>
+
+<script>
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>10),{passive:true});
+function toggleMenu(){document.getElementById('mob').classList.toggle('open')}
+document.querySelectorAll('.mob a').forEach(l=>l.addEventListener('click',()=>document.getElementById('mob').classList.remove('open')));
+// Highlight policy TOC on scroll
+const tocLinks=document.querySelectorAll('.policy-toc a');
+const sections=Array.from(tocLinks).map(a=>document.querySelector(a.getAttribute('href'))).filter(Boolean);
+window.addEventListener('scroll',()=>{
+  const y=scrollY+120;
+  let curr='';
+  sections.forEach(s=>{if(s.offsetTop<=y)curr=s.id});
+  tocLinks.forEach(a=>{a.classList.toggle('active',a.getAttribute('href')==='#'+curr)});
+},{passive:true});
+</script>
+</body>
+</html>

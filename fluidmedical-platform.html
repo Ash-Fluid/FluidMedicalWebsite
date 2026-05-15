@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Platform — Fluid Medical</title>
+<link rel="stylesheet" href="colors_and_type.css">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--fm-font-sans);background:var(--fm-bg);color:var(--fm-fg);line-height:var(--fm-leading-relaxed);-webkit-font-smoothing:antialiased}
+img{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+ul{list-style:none}
+.container{max-width:var(--fm-container);margin:0 auto;padding:0 clamp(1.5rem,5vw,4rem);position:relative;z-index:1}
+.section-pad{padding:clamp(5rem,10vw,9rem) 0}
+.topo{position:absolute;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.topo svg{width:100%;height:100%}
+.topo--ink{opacity:.08;color:var(--fm-cream-100)}
+.topo--cream{opacity:.05;color:var(--fm-ink-800)}
+
+/* NAV */
+#nav{position:fixed;top:0;left:0;right:0;z-index:300;height:90px;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(1.5rem,5vw,4rem);background:rgba(14,13,11,.96);backdrop-filter:blur(16px);border-bottom:1px solid rgba(251,247,238,.06);transition:box-shadow .22s}
+#nav.scrolled{box-shadow:0 4px 32px rgba(14,13,11,.55)}
+.nav-logo{display:flex;align-items:center;gap:11px}
+.nav-mark{width:68px;height:68px;flex-shrink:0}
+.nav-wordmark{height:68px;width:auto}
+.nav-links{display:flex;align-items:center;gap:1.75rem}
+.nav-links a{color:rgba(251,247,238,.5);font-size:.9375rem;font-weight:500;transition:color .15s}
+.nav-links a:hover,.nav-links a.active{color:var(--fm-cream-100)}
+.btn-nav{background:var(--fm-brand);color:var(--fm-ink-900);padding:.5rem 1.3rem;border-radius:var(--fm-r-sm);font-size:.9rem;font-weight:700;transition:background .15s,transform .15s}
+.btn-nav:hover{background:var(--fm-brand-hover);transform:translateY(-1px);color:var(--fm-ink-900)}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:4px}
+.hamburger span{display:block;width:22px;height:2px;background:var(--fm-cream-100);border-radius:2px}
+.mob{display:none;position:fixed;top:90px;left:0;right:0;z-index:299;background:var(--fm-ink-900);padding:1.5rem 2rem 2rem;border-bottom:1px solid rgba(251,247,238,.08);flex-direction:column}
+.mob.open{display:flex}
+.mob a{color:var(--fm-cream-100);font-size:1rem;font-weight:500;padding:.7rem 0;border-bottom:1px solid rgba(251,247,238,.07)}
+.mob .btn-nav{margin-top:.75rem;text-align:center;display:block;border:none}
+
+/* BTN */
+.btn{display:inline-flex;align-items:center;gap:8px;padding:.875rem 1.75rem;border-radius:var(--fm-r-md);font-family:var(--fm-font-sans);font-size:1rem;font-weight:600;cursor:pointer;border:none;transition:background .15s,transform .15s;text-decoration:none}
+.btn:hover{transform:translateY(-2px)}
+.btn-brass{background:var(--fm-brand);color:var(--fm-ink-900)}
+.btn-brass:hover{background:var(--fm-brand-hover)}
+.btn-outline-cream{background:transparent;color:var(--fm-cream-100);border:1.5px solid rgba(251,247,238,.28)}
+.btn-outline-cream:hover{border-color:rgba(251,247,238,.7);background:rgba(251,247,238,.06)}
+
+/* PAGE HERO */
+.page-hero{background:var(--fm-ink-900);color:var(--fm-cream-100);padding:calc(90px + 5rem) 0 5rem;position:relative;overflow:hidden}
+.page-hero-eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:.75rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--fm-brand);margin-bottom:1.25rem}
+.page-hero-line{width:22px;height:1px;background:var(--fm-brand)}
+.page-hero h1{font-family:var(--fm-font-display);font-size:clamp(2.5rem,6vw,4.5rem);line-height:1.08;letter-spacing:-.025em;max-width:700px}
+.page-hero h1 em{font-style:italic;color:var(--fm-brand)}
+.page-hero p{font-size:clamp(1rem,1.6vw,1.125rem);color:rgba(251,247,238,.55);max-width:560px;margin-top:1.25rem;line-height:1.72}
+
+/* FEATURE DETAIL */
+.feature-block{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;padding:clamp(4rem,8vw,7rem) 0}
+.feature-block.reverse{direction:rtl}
+.feature-block.reverse>*{direction:ltr}
+.feature-block:not(:last-child){border-bottom:1px solid var(--fm-border)}
+.feat-eyebrow{font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;margin-bottom:.75rem}
+.feat-num{font-family:var(--fm-font-display);font-size:5rem;line-height:1;letter-spacing:-.04em;margin-bottom:1rem}
+.feature-block h2{font-family:var(--fm-font-display);font-size:clamp(1.8rem,3vw,2.6rem);letter-spacing:-.02em;margin-bottom:1rem}
+.feature-block h2 em{font-style:italic;color:var(--fm-brand)}
+.feature-block p{font-size:1.0625rem;color:var(--fm-fg-muted);line-height:1.72;margin-bottom:1.25rem}
+.feat-checklist{display:flex;flex-direction:column;gap:.55rem}
+.feat-checklist li{display:flex;align-items:flex-start;gap:10px;font-size:.9375rem;color:var(--fm-fg-muted)}
+.feat-check{width:18px;height:18px;border-radius:50%;background:var(--fm-brand-tint);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.feat-badge{display:inline-flex;align-items:center;gap:5px;font-size:.72rem;font-weight:700;padding:.25rem .7rem;border-radius:var(--fm-r-sm);margin-bottom:1rem}
+.badge-live{background:var(--fm-success-bg);color:var(--fm-success)}
+.badge-live::before{content:'';display:block;width:5px;height:5px;border-radius:50%;background:var(--fm-success)}
+.badge-soon{background:var(--fm-brand-tint);color:var(--fm-brand-active)}
+
+/* VISUAL PANELS */
+.feat-visual{border-radius:var(--fm-r-2xl);overflow:hidden;background:var(--fm-ink-900);aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;position:relative;border:1px solid rgba(181,138,46,.15)}
+.feat-visual-inner{padding:2rem;width:100%}
+
+/* TIERS GRID */
+.tiers-section{background:var(--fm-ink-900);color:var(--fm-cream-100);position:relative;overflow:hidden}
+.tiers-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.25rem;margin-top:3rem}
+.tier-card{border-radius:var(--fm-r-xl);background:rgba(251,247,238,.04);color:var(--fm-cream-100);padding:2rem;border:1px solid rgba(181,138,46,.12);position:relative;overflow:hidden;transition:border-color .2s,transform .2s}
+.tier-card::before{content:'';position:absolute;top:0;left:0;width:3px;bottom:0}
+.tc-f1::before{background:var(--fm-brand)}.tc-f2::before{background:var(--fm-brass-400)}.tc-wh::before{background:#BF4A6A}.tc-mh::before{background:#4A9EBF}
+.tier-card:hover{border-color:var(--fm-brand);transform:translateY(-4px)}
+.tier-pill{display:inline-flex;align-items:center;font-size:.72rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;padding:.25rem .75rem;border-radius:var(--fm-r-pill);margin-bottom:1rem}
+.tp-f1{background:rgba(181,138,46,.14);color:var(--fm-brand)}.tp-f2{background:rgba(212,169,67,.14);color:var(--fm-brass-400)}.tp-wh{background:rgba(191,74,106,.14);color:#BF4A6A}.tp-mh{background:rgba(74,158,191,.14);color:#4A9EBF}
+.tier-count{font-family:var(--fm-font-display);font-size:3rem;color:var(--fm-brand);line-height:1}
+.tier-count-lbl{font-size:.78rem;color:rgba(251,247,238,.45);font-weight:500;margin-bottom:.85rem}
+.tier-card h3{font-family:var(--fm-font-display);font-size:1.35rem;letter-spacing:-.015em;margin-bottom:.4rem;color:var(--fm-cream-100)}
+.tier-sub{font-size:.875rem;color:rgba(251,247,238,.5);line-height:1.65;margin-bottom:1.25rem}
+.markers{display:flex;flex-wrap:wrap;gap:.45rem}
+.marker-chip{font-size:.73rem;padding:.22rem .6rem;border-radius:var(--fm-r-sm);background:rgba(251,247,238,.07);color:rgba(251,247,238,.72);font-weight:500;border:1px solid rgba(251,247,238,.08)}
+
+/* FOOTER */
+footer{background:var(--fm-ink-900);color:rgba(251,247,238,.5);padding:4.5rem 0 2.25rem}
+.footer-grid{display:grid;grid-template-columns:2.2fr 1fr 1fr 1fr;gap:3rem;margin-bottom:2.5rem}
+.footer-mark{width:38px;height:38px;margin-bottom:.85rem}
+.footer-tagline{font-size:.875rem;line-height:1.65;max-width:265px}
+.footer-col h5{color:var(--fm-cream-100);font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;margin-bottom:1rem}
+.footer-col a{display:block;font-size:.875rem;margin-bottom:.5rem;color:rgba(251,247,238,.5);transition:color .15s}
+.footer-col a:hover{color:var(--fm-cream-100)}
+.footer-bottom{border-top:1px solid rgba(251,247,238,.07);padding-top:1.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+.footer-copy{color:rgba(251,247,238,.28);font-size:.8rem}
+.footer-legal{display:flex;gap:1.5rem}
+.footer-legal a{color:rgba(251,247,238,.28);font-size:.8rem}
+.footer-legal a:hover{color:rgba(251,247,238,.55)}
+
+@media(max-width:860px){.feature-block{grid-template-columns:1fr}.feature-block.reverse{direction:ltr}.tiers-grid{grid-template-columns:1fr}.footer-grid{grid-template-columns:1fr 1fr;gap:2rem}}
+@media(max-width:640px){.nav-links{display:none}.hamburger{display:flex}.footer-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <a href="fluidmedical-home.html" class="nav-logo">
+    <div class="nav-mark"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><defs><linearGradient id="nm" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#D4A943"/><stop offset="55%" stop-color="#B58A2E"/><stop offset="100%" stop-color="#8A6822"/></linearGradient></defs><circle cx="32" cy="32" r="32" fill="#131211"/><circle cx="32" cy="32" r="29.5" fill="none" stroke="url(#nm)" stroke-width="1.6"/><path d="M11 34 C 17 22, 23 46, 32 32 S 46 16, 53 28" fill="none" stroke="url(#nm)" stroke-width="3.2" stroke-linecap="round"/></svg></div>
+    <img src="assets/wordmarks/fluid-medical-wordmark-brass.png" alt="Fluid Medical" class="nav-wordmark">
+  </a>
+  <div class="nav-links">
+    <a href="fluidmedical-home.html">Home</a>
+    <a href="fluidmedical-platform.html" class="active">Platform</a>
+    <a href="fluidmedical-about.html">About</a>
+    <a href="fluidmedical-security.html">Security &amp; Data</a>
+    <a href="fluidmedical-contact.html">Contact</a>
+    <a href="fluidmedical-contact.html" class="btn-nav">Get Oria</a>
+  </div>
+  <button class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+</nav>
+<div class="mob" id="mob">
+  <a href="fluidmedical-home.html">Home</a><a href="fluidmedical-platform.html">Platform</a><a href="fluidmedical-about.html">About</a><a href="fluidmedical-security.html">Security &amp; Data</a><a href="fluidmedical-contact.html">Contact</a><a href="fluidmedical-contact.html" class="btn-nav">Get Oria</a>
+</div>
+
+<!-- PAGE HERO -->
+<section class="page-hero">
+  <div class="topo topo--ink">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 700" preserveAspectRatio="xMidYMid slice"><g fill="none" stroke="currentColor" stroke-width="1"><ellipse cx="950" cy="350" rx="580" ry="360" transform="rotate(-10 950 350)"/><ellipse cx="950" cy="350" rx="494" ry="288" transform="rotate(-10 950 350)"/><ellipse cx="950" cy="350" rx="408" ry="218" transform="rotate(-10 950 350)"/><ellipse cx="200" cy="580" rx="260" ry="170" transform="rotate(8 200 580)"/><ellipse cx="200" cy="580" rx="190" ry="120" transform="rotate(8 200 580)"/></g></svg>
+  </div>
+  <div class="container">
+    <div class="page-hero-eyebrow"><span class="page-hero-line"></span>The Oria Platform</div>
+    <h1>Four features. One <em>complete</em> picture.</h1>
+    <p>From the moment you scan a strip to the moment an insight changes your day — every part of Oria is designed to make your health data work harder for you.</p>
+  </div>
+</section>
+
+<!-- FEATURE 1: FLUID PRECISION -->
+<section class="section-pad" style="position:relative;overflow:hidden" id="precision">
+  <div class="container">
+    <div class="feature-block">
+      <div>
+        <div class="feat-badge badge-live">Live at Launch</div>
+        <div class="feat-eyebrow" style="color:var(--fm-brand)">Precision</div>
+        <div class="feat-num" style="color:var(--fm-brand)">01</div>
+        <h2>Lab-grade urinalysis.<br><em>At home.</em></h2>
+        <p>Precision turns your phone camera into a research-grade urinalysis reader. Hold it over one of our patented test strips and get results in seconds — the same markers a lab would measure, in the privacy of your own bathroom.</p>
+        <p>With two primary tiers under development covering 30+ urine markers in total, Precision rapidly scales from already available daily wellness and nutrition check-in to a comprehensive hormonal panel in under two years, while simultaneously developing further pipeline covering Metabolic, Gut Health, Mental Health, Longevity, and Detox areas of well-being.</p>
+        <ul class="feat-checklist">
+          <li><div class="feat-check"><svg width="9" height="9" viewBox="0 0 12 12" fill="none" stroke="var(--fm-brand)" stroke-width="2" stroke-linecap="round"><polyline points="2,6 4.5,8.5 10,3"/></svg></div>95–100% accuracy across all existing biomarkers validated by independent 3rd party lab</li>
+          <li><div class="feat-check"><svg width="9" height="9" viewBox="0 0 12 12" fill="none" stroke="var(--fm-brand)" stroke-width="2" stroke-linecap="round"><polyline points="2,6 4.5,8.5 10,3"/></svg></div>7 patents protecting the strip and scan technology</li>
+          <li><div class="feat-check"><svg width="9" height="9" viewBox="0 0 12 12" fill="none" stroke="var(--fm-brand)" stroke-width="2" stroke-linecap="round"><polyline points="2,6 4.5,8.5 10,3"/></svg></div>Results stored privately — never shared without consent</li>
+          <li><div class="feat-check"><svg width="9" height="9" viewBox="0 0 12 12" fill="none" stroke="var(--fm-brand)" stroke-width="2" stroke-linecap="round"><polyline points="2,6 4.5,8.5 10,3"/></svg></div>Works offline — no cloud dependency for scanning</li>
+        </ul>
+      </div>
+      <div class="feat-visual">
+        <div class="feat-visual-inner">
+          <div style="text-align:center;margin-bottom:1.5rem">
+            <div style="width:72px;height:72px;border-radius:50%;border:3px solid var(--fm-brand);display:flex;align-items:center;justify-content:center;margin:0 auto">
+              <div style="text-align:center"><div style="font-family:var(--fm-font-display);font-size:1.5rem;color:var(--fm-cream-100);line-height:1">9</div><div style="font-size:.6rem;color:rgba(251,247,238,.4)">markers</div></div>
+            </div>
+            <div style="font-size:.75rem;color:var(--fm-brand);font-weight:700;margin-top:.75rem;text-transform:uppercase;letter-spacing:.1em">Foundational Ph1 Strip</div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem">
+            <div style="background:rgba(251,247,238,.05);border-radius:.5rem;padding:.6rem .75rem;text-align:center"><div style="font-size:.65rem;color:rgba(251,247,238,.35);text-transform:uppercase;letter-spacing:.3px">pH</div><div style="font-size:1.1rem;font-weight:700;color:#3FBF8A">6.0</div></div>
+            <div style="background:rgba(251,247,238,.05);border-radius:.5rem;padding:.6rem .75rem;text-align:center"><div style="font-size:.65rem;color:rgba(251,247,238,.35);text-transform:uppercase;letter-spacing:.3px">Glucose</div><div style="font-size:1.1rem;font-weight:700;color:#3FBF8A">NEG</div></div>
+            <div style="background:rgba(251,247,238,.05);border-radius:.5rem;padding:.6rem .75rem;text-align:center"><div style="font-size:.65rem;color:rgba(251,247,238,.35);text-transform:uppercase;letter-spacing:.3px">Ketones</div><div style="font-size:1.1rem;font-weight:700;color:var(--fm-brand)">TR</div></div>
+            <div style="background:rgba(251,247,238,.05);border-radius:.5rem;padding:.6rem .75rem;text-align:center"><div style="font-size:.65rem;color:rgba(251,247,238,.35);text-transform:uppercase;letter-spacing:.3px">Protein</div><div style="font-size:1.1rem;font-weight:700;color:#3FBF8A">NEG</div></div>
+            <div style="background:rgba(251,247,238,.05);border-radius:.5rem;padding:.6rem .75rem;text-align:center"><div style="font-size:.65rem;color:rgba(251,247,238,.35);text-transform:uppercase;letter-spacing:.3px">Vit C</div><div style="font-size:1.1rem;font-weight:700;color:#3FBF8A">POS</div></div>
+            <div style="background:rgba(251,247,238,.05);border-radius:.5rem;padding:.6rem .75rem;text-align:center"><div style="font-size:.65rem;color:rgba(251,247,238,.35);text-transform:uppercase;letter-spacing:.3px">LE</div><div style="font-size:1.1rem;font-weight:700;color:#3FBF8A">NEG</div></div>
+          </div>
+          <div style="margin-top:1rem;background:linear-gradient(135deg,rgba(181,138,46,.12),rgba(74,158,191,.06));border:1px solid rgba(181,138,46,.18);border-radius:.75rem;padding:.85rem 1rem">
+            <div style="font-size:.65rem;font-weight:700;color:var(--fm-brand);text-transform:uppercase;letter-spacing:.4px;margin-bottom:.4rem">Oria AI</div>
+            <div style="font-size:.8125rem;color:rgba(251,247,238,.65);line-height:1.5">Ketone trace consistent with overnight fast — no other flags. HRV and hydration both look good.</div>
+            <div style="font-size:.65rem;color:rgba(251,247,238,.22);margin-top:.4rem">Insights, not medical advice.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FEATURE 2: DAILYSIGNAL -->
+    <div class="feature-block reverse" id="signal" style="padding-top:0">
+      <div>
+        <div class="feat-badge badge-live">Live at Launch</div>
+        <div class="feat-eyebrow" style="color:#4A9EBF">Daily Signal</div>
+        <div class="feat-num" style="color:#4A9EBF">02</div>
+        <h2>Your wearable data,<br><em>in context.</em></h2>
+        <p>DailySignal syncs heart rate, HRV, sleep architecture, steps, and resting energy from Apple Health, Samsung Health, Oura Ring, WHOOP, and Fitbit — and then interprets each reading against your strip results and personal context.</p>
+        <ul class="feat-checklist">
+          <li><div class="feat-check" style="background:rgba(74,158,191,.12)"><svg width="9" height="9" viewBox="0 0 12 12" fill="none" stroke="#4A9EBF" stroke-width="2" stroke-linecap="round"><polyline points="2,6 4.5,8.5 10,3"/></svg></div>Apple Health, Samsung Health, Oura, WHOOP, Fitbit</li>
+          <li><div class="feat-check" style="background:rgba(74,158,191,.12)"><svg width="9" height="9" viewBox="0 0 12 12" fill="none" stroke="#4A9EBF" stroke-width="2" stroke-linecap="round"><polyline points="2,6 4.5,8.5 10,3"/></svg></div>Trends shown against your personal baseline, not global averages</li>
+          <li><div class="feat-check" style="background:rgba(74,158,191,.12)"><svg width="9" height="9" viewBox="0 0 12 12" fill="none" stroke="#4A9EBF" stroke-width="2" stroke-linecap="round"><polyline points="2,6 4.5,8.5 10,3"/></svg></div>Correlated with strip and Me+ data for full context</li>
+          <li><div class="feat-check" style="background:rgba(74,158,191,.12)"><svg width="9" height="9" viewBox="0 0 12 12" fill="none" stroke="#4A9EBF" stroke-width="2" stroke-linecap="round"><polyline points="2,6 4.5,8.5 10,3"/></svg></div>On-device processing — raw biometric data never leaves your phone</li>
+        </ul>
+      </div>
+      <div class="feat-visual" style="border-color:rgba(74,158,191,.18)">
+        <div class="feat-visual-inner">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+            <div style="font-size:.85rem;font-weight:700;color:var(--fm-cream-100)">DailySignal</div>
+            <div style="font-size:.7rem;color:rgba(251,247,238,.35)">Last 7 days</div>
+          </div>
+          <div style="display:flex;align-items:flex-end;gap:6px;height:80px;background:rgba(251,247,238,.04);border-radius:.75rem;padding:.75rem .75rem .5rem">
+            <div style="flex:1;background:rgba(74,158,191,.25);border-radius:3px;height:52%"></div>
+            <div style="flex:1;background:rgba(74,158,191,.25);border-radius:3px;height:62%"></div>
+            <div style="flex:1;background:rgba(74,158,191,.25);border-radius:3px;height:47%"></div>
+            <div style="flex:1;background:#4A9EBF;border-radius:3px;height:79%"></div>
+            <div style="flex:1;background:rgba(74,158,191,.25);border-radius:3px;height:66%"></div>
+            <div style="flex:1;background:#4A9EBF;border-radius:3px;height:85%"></div>
+            <div style="flex:1;background:#4A9EBF;border-radius:3px;height:88%"></div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-top:.75rem">
+            <div style="background:rgba(251,247,238,.05);border-radius:.5rem;padding:.75rem 1rem"><div style="font-size:.65rem;color:rgba(251,247,238,.35);text-transform:uppercase;letter-spacing:.3px">Heart Rate</div><div style="font-size:1.3rem;font-weight:700;color:var(--fm-cream-100)">62 <span style="font-size:.75rem;color:rgba(251,247,238,.3)">bpm</span></div></div>
+            <div style="background:rgba(251,247,238,.05);border-radius:.5rem;padding:.75rem 1rem"><div style="font-size:.65rem;color:rgba(251,247,238,.35);text-transform:uppercase;letter-spacing:.3px">HRV</div><div style="font-size:1.3rem;font-weight:700;color:var(--fm-cream-100)">48 <span style="font-size:.75rem;color:#3FBF8A">↑</span></div></div>
+            <div style="background:rgba(251,247,238,.05);border-radius:.5rem;padding:.75rem 1rem"><div style="font-size:.65rem;color:rgba(251,247,238,.35);text-transform:uppercase;letter-spacing:.3px">Sleep</div><div style="font-size:1.1rem;font-weight:700;color:var(--fm-cream-100)">7h 22m</div></div>
+            <div style="background:rgba(251,247,238,.05);border-radius:.5rem;padding:.75rem 1rem"><div style="font-size:.65rem;color:rgba(251,247,238,.35);text-transform:uppercase;letter-spacing:.3px">Active Cal</div><div style="font-size:1.1rem;font-weight:700;color:var(--fm-cream-100)">342</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FEATURE 3: FLUID+ME -->
+    <div class="feature-block" id="me" style="padding-top:0">
+      <div>
+        <div class="feat-badge badge-live">Live at Launch</div>
+        <div class="feat-eyebrow" style="color:#BF4A6A">Me+</div>
+        <div class="feat-num" style="color:#BF4A6A">03</div>
+        <h2>Your context.<br>Your story.<br><em>Your location.</em></h2>
+        <p>No blood test or wearable can tell you everything. Me+ captures the things that make your numbers make sense: your cycle, your symptoms, your medications, your mood, and your lifestyle. All private. All yours.</p>
+        <ul class="feat-checklist">
+          <li><div class="feat-check" style="background:rgba(191,74,106,.1)"><svg width="9" height="9" viewBox="0 0 12 12" fill="none" stroke="#BF4A6A" stroke-width="2" stroke-linecap="round"><polyline points="2,6 4.5,8.5 10,3"/></svg></div>Menstrual cycle and ovulation tracking</li>
+          <li><div class="feat-check" style="background:rgba(191,74,106,.1)"><svg width="9" height="9" viewBox="0 0 12 12" fill="none" stroke="#BF4A6A" stroke-width="2" stroke-linecap="round"><polyline points="2,6 4.5,8.5 10,3"/></svg></div>Symptom and medication logging</li>
+          <li><div class="feat-check" style="background:rgba(191,74,106,.1)"><svg width="9" height="9" viewBox="0 0 12 12" fill="none" stroke="#BF4A6A" stroke-width="2" stroke-linecap="round"><polyline points="2,6 4.5,8.5 10,3"/></svg></div>Mood, stress, and energy journalling</li>
+          <li><div class="feat-check" style="background:rgba(191,74,106,.1)"><svg width="9" height="9" viewBox="0 0 12 12" fill="none" stroke="#BF4A6A" stroke-width="2" stroke-linecap="round"><polyline points="2,6 4.5,8.5 10,3"/></svg></div>Used by Oria to personalise every insight</li>
+        </ul>
+      </div>
+      <div class="feat-visual" style="border-color:rgba(191,74,106,.18)">
+        <div class="feat-visual-inner">
+          <div style="font-size:.85rem;font-weight:700;color:var(--fm-cream-100);margin-bottom:1rem">Me+ — Today</div>
+          <div style="display:flex;flex-direction:column;gap:.5rem">
+            <div style="background:rgba(251,247,238,.05);border-radius:.65rem;padding:.75rem 1rem;display:flex;align-items:center;justify-content:space-between"><span style="font-size:.875rem;color:rgba(251,247,238,.65)">Cycle day</span><span style="font-size:.875rem;font-weight:700;color:var(--fm-cream-100)">Day 8</span></div>
+            <div style="background:rgba(251,247,238,.05);border-radius:.65rem;padding:.75rem 1rem;display:flex;align-items:center;justify-content:space-between"><span style="font-size:.875rem;color:rgba(251,247,238,.65)">Energy</span><span style="font-size:.875rem;font-weight:700;color:#3FBF8A">High</span></div>
+            <div style="background:rgba(251,247,238,.05);border-radius:.65rem;padding:.75rem 1rem;display:flex;align-items:center;justify-content:space-between"><span style="font-size:.875rem;color:rgba(251,247,238,.65)">Mood</span><span style="font-size:.875rem;font-weight:700;color:var(--fm-cream-100)">Good</span></div>
+            <div style="background:rgba(251,247,238,.05);border-radius:.65rem;padding:.75rem 1rem;display:flex;align-items:center;justify-content:space-between"><span style="font-size:.875rem;color:rgba(251,247,238,.65)">Symptom flags</span><span style="font-size:.875rem;font-weight:700;color:#3FBF8A">None</span></div>
+          </div>
+          <div style="margin-top:1rem;padding:.75rem 1rem;background:rgba(191,74,106,.08);border:1px solid rgba(191,74,106,.2);border-radius:.65rem;font-size:.8rem;color:rgba(251,247,238,.55);line-height:1.55">Your data is stored on-device and end-to-end encrypted. Never shared without your explicit consent.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FEATURE 4: MY RECORDS -->
+    <div class="feature-block reverse" id="records" style="padding-top:0">
+      <div>
+        <div class="feat-badge badge-soon">Live at Launch</div>
+        <div class="feat-eyebrow" style="color:#7A6ABF">MyRecords</div>
+        <div class="feat-num" style="color:#7A6ABF">04</div>
+        <h2>Your whole health history,<br><em>connected.</em></h2>
+        <p>Upload your urine marker results, prescriptions, imaging reports, and clinical notes. Oria reads and indexes them — then visualizes connections across your entire uploaded history. Search anything. Share longitudinal data securely with any provider.</p>
+        <ul class="feat-checklist">
+          <li><div class="feat-check" style="background:rgba(122,106,191,.12)"><svg width="9" height="9" viewBox="0 0 12 12" fill="none" stroke="#7A6ABF" stroke-width="2" stroke-linecap="round"><polyline points="2,6 4.5,8.5 10,3"/></svg></div>AI document parsing — PDFs, images, HL7, FHIR formats</li>
+          <li><div class="feat-check" style="background:rgba(122,106,191,.12)"><svg width="9" height="9" viewBox="0 0 12 12" fill="none" stroke="#7A6ABF" stroke-width="2" stroke-linecap="round"><polyline points="2,6 4.5,8.5 10,3"/></svg></div>Cross-referenced with strip and wearable history</li>
+          <li><div class="feat-check" style="background:rgba(122,106,191,.12)"><svg width="9" height="9" viewBox="0 0 12 12" fill="none" stroke="#7A6ABF" stroke-width="2" stroke-linecap="round"><polyline points="2,6 4.5,8.5 10,3"/></svg></div>Secure, time-limited sharing links for practitioners</li>
+          <li><div class="feat-check" style="background:rgba(122,106,191,.12)"><svg width="9" height="9" viewBox="0 0 12 12" fill="none" stroke="#7A6ABF" stroke-width="2" stroke-linecap="round"><polyline points="2,6 4.5,8.5 10,3"/></svg></div>Sovereign storage — fully under your control</li>
+        </ul>
+      </div>
+      <div class="feat-visual" style="border-color:rgba(122,106,191,.2)">
+        <div class="feat-visual-inner" style="display:flex;align-items:center;justify-content:center;min-height:280px">
+          <div style="text-align:center">
+            <div style="width:72px;height:72px;border-radius:var(--fm-r-xl);background:rgba(122,106,191,.15);border:1px solid rgba(122,106,191,.25);display:flex;align-items:center;justify-content:center;margin:0 auto .85rem">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#7A6ABF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            </div>
+            <div style="font-family:var(--fm-font-display);font-size:1.35rem;color:var(--fm-cream-100);margin-bottom:.4rem">MyRecords</div>
+            <div style="font-size:.875rem;color:rgba(251,247,238,.4);max-width:220px;line-height:1.55">AI-powered health record management. Available 12 months from launch.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BIOMARKER TIERS -->
+<section class="tiers-section section-pad">
+  <div class="topo topo--ink"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 900" preserveAspectRatio="xMidYMid slice"><g fill="none" stroke="currentColor" stroke-width="1"><ellipse cx="700" cy="450" rx="620" ry="380" transform="rotate(-8 700 450)"/><ellipse cx="700" cy="450" rx="535" ry="304" transform="rotate(-8 700 450)"/><ellipse cx="700" cy="450" rx="450" ry="234" transform="rotate(-8 700 450)"/></g></svg></div>
+  <div class="container">
+    <div style="max-width:640px;margin-bottom:3rem">
+      <div style="display:inline-flex;align-items:center;gap:10px;font-size:.75rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--fm-brand);margin-bottom:1.25rem"><span style="width:22px;height:1px;background:var(--fm-brand)"></span>Precision — Biomarker Tiers</div>
+      <h2 class="fm-h2" style="color:var(--fm-cream-100)">Two tiers. <em>30+ markers.</em></h2>
+      <p style="color:rgba(251,247,238,.52);font-size:1.0625rem;line-height:1.72;margin-top:1rem">In the first 24 months, Fluid's Science and Technology team will be focusing on two core tiers of our product — Foundational and Premium. Those two tiers will cover foundational wellness and health tracking first, with targeted panels for women's and men's health to follow closely.</p>
+    </div>
+    <div class="tiers-grid">
+      <div class="tier-card tc-f1">
+        <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.85rem">
+          <div class="tier-pill tp-f1" style="margin-bottom:0">Tier 1</div>
+          <div style="display:inline-flex;align-items:center;gap:5px;font-size:.7rem;font-weight:700;padding:.22rem .65rem;border-radius:var(--fm-r-pill);background:rgba(63,191,138,.12);color:#3FBF8A">
+            <span style="width:5px;height:5px;border-radius:50%;background:#3FBF8A;display:block"></span>Complete
+          </div>
+        </div>
+        <div class="tier-count">9</div>
+        <div class="tier-count-lbl">biomarkers</div>
+        <h3>Foundational — Phase 1</h3>
+        <p class="tier-sub">Included in all Oria plans. Core metabolic and urinary health baseline — available at launch.</p>
+        <div class="markers">
+          <span class="marker-chip">Hydration markers</span>
+          <span class="marker-chip">Energy &amp; ketone markers</span>
+          <span class="marker-chip">Micronutrients</span>
+          <span class="marker-chip">Urinary indicators</span>
+        </div>
+      </div>
+      <div class="tier-card tc-f2">
+        <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.85rem;flex-wrap:wrap">
+          <div class="tier-pill tp-f2" style="margin-bottom:0">Tier 2</div>
+          <div style="display:inline-flex;align-items:center;gap:5px;font-size:.7rem;font-weight:700;padding:.22rem .65rem;border-radius:var(--fm-r-pill);background:rgba(212,169,67,.1);color:var(--fm-brass-400)">Scientific development &amp; validation ongoing</div>
+        </div>
+        <div class="tier-count">21+</div>
+        <div class="tier-count-lbl">biomarkers</div>
+        <h3>Foundational — Phase 2</h3>
+        <p class="tier-sub">Extended coverage across micronutrient, metabolic, and hormonal categories. Oria Premium and above.</p>
+        <div class="markers">
+          <span class="marker-chip">Extended micronutrients</span>
+          <span class="marker-chip">Liver &amp; kidney markers</span>
+          <span class="marker-chip">Metabolic indicators</span>
+          <span class="marker-chip">Protein &amp; inflammation markers</span>
+          <span class="marker-chip">Hormonal panel</span>
+        </div>
+      </div>
+    </div>
+    <!-- Pipeline / More Tiers Coming -->
+    <div style="margin-top:2rem;padding:2rem 2.25rem;border-radius:var(--fm-r-xl);background:rgba(251,247,238,.04);border:1px solid rgba(181,138,46,.14)">
+      <div style="font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--fm-brand);margin-bottom:.75rem">Pipeline</div>
+      <p style="color:rgba(251,247,238,.65);line-height:1.72;font-size:1rem">Fluid's science and technology teams are working hard on expansion and completion of the Oria biomarker pipeline that covers Metabolic, Gut Health, Mental Health, Longevity, and Detox areas of your well-being — 60+ active markers across 10 specialised panels.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div><div class="footer-mark"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><defs><linearGradient id="fm" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#D4A943"/><stop offset="55%" stop-color="#B58A2E"/><stop offset="100%" stop-color="#8A6822"/></linearGradient></defs><circle cx="32" cy="32" r="32" fill="#131211"/><circle cx="32" cy="32" r="29.5" fill="none" stroke="url(#fm)" stroke-width="1.6"/><path d="M11 34 C 17 22, 23 46, 32 32 S 46 16, 53 28" fill="none" stroke="url(#fm)" stroke-width="3.2" stroke-linecap="round"/></svg></div><p class="footer-tagline">Primary Health Care Within Reach. Built on Fluid Scientific's sovereign data infrastructure. Vancouver, BC, Canada.</p></div>
+      <div class="footer-col"><h5>Platform</h5><a href="#precision">Precision</a><a href="#signal">DailySignal</a><a href="#me">Me+</a><a href="#records">MyRecords</a><a href="fluidmedical-demo.html">Live Demo</a></div>
+      <div class="footer-col"><h5>Company</h5><a href="fluidmedical-about.html">About Us</a><a href="fluidmedical-security.html">Security &amp; Data</a><a href="fluidmedical-contact.html">Contact</a><a href="https://fluidscientific.com" target="_blank" rel="noopener">Fluid Scientific</a></div>
+      <div class="footer-col"><h5>Get Oria</h5><a href="fluidmedical-contact.html">Individuals</a><a href="fluidmedical-contact.html">Organisations</a><a href="fluidmedical-contact.html">Investors &amp; Media</a><a href="mailto:info@fluidmedical.com">info@fluidmedical.com</a></div>
+    </div>
+      <div style="border-top:1px solid rgba(251,247,238,.07);padding-top:1.5rem;padding-bottom:1.5rem;display:flex;align-items:center;gap:1rem">
+        <a href="https://linkedin.com/company/fluidmedical/" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:.5rem;color:rgba(251,247,238,.45);font-size:.85rem;font-weight:500;transition:color .15s" onmouseover="this.style.color='rgba(251,247,238,.85)'" onmouseout="this.style.color='rgba(251,247,238,.45)'"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>LinkedIn</a>
+      </div>
+    <div class="footer-bottom" style="border-top:none;padding-top:0"><div class="footer-copy">&copy; 2026 Fluid Medical Inc. Vancouver, BC, Canada.</div><div class="footer-legal"><a href="#">Privacy Policy</a><a href="#">Terms of Service</a></div></div>
+  </div>
+</footer>
+<script>
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>10),{passive:true});
+function toggleMenu(){document.getElementById('mob').classList.toggle('open')}
+document.querySelectorAll('.mob a').forEach(l=>l.addEventListener('click',()=>document.getElementById('mob').classList.remove('open')));
+</script>
+</body>
+</html>
